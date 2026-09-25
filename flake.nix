@@ -1,5 +1,5 @@
 {
-  description = "ThatProject Development Environment";
+  description = "ThatProject";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -8,6 +8,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
+    cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
   };
 
   outputs = { self, nixpkgs, rust-overlay, flake-utils }:
@@ -44,4 +45,11 @@
         };
       }
     );
+
+    packages.default = pkgs.rustPlatform.buildRustPackage {
+      pname = cargoToml.package.name;
+      version = cargoToml.package.version;
+      src = ./.;
+      cargoLock.lockFile = ./Cargo.lock;
+    };
 }
