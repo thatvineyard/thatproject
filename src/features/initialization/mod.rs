@@ -16,7 +16,7 @@ pub fn create_manifest(name: String, description: String) -> Result<Manifest, Bo
     fs::create_dir(project_dir)?;
   }
 
-  let manifest_path = format!("{}/ manifest.json", project_dir);
+  let manifest_path = format!("{}/manifest.json", project_dir);
   let json = serde_json::to_string_pretty(&manifest)?;
   fs::write(&manifest_path, json)?;
 
