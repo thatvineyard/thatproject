@@ -3,7 +3,7 @@
     {
       "name": "thatproject-init",
       "version": "1",
-      "files": ["init.md"]
+      "files": ["SKILL.md"]
     }
   ]
 }
