@@ -1,6 +1,6 @@
 ---
+name: thatproject-init
 description: Initialize a new project with name and description
-type: skill
 ---
 
 # thatproject-init
