@@ -26,6 +26,22 @@ jobs:
       - name: Build
         run: cargo build --release --target ${{ matrix.target }}
       
+      - name: Decode certificate
+        run: |
+          $cert = [System.Convert]::FromBase64String("${{ secrets.SIGNING_CERT }}")
+          [System.IO.File]::WriteAllBytes("cert.pfx", $cert)
+        shell: pwsh
+      
+      - name: Sign binary
+        run: |
+          $pwd = ConvertTo-SecureString -String "${{ secrets.SIGNING_CERT_PASSWORD }}" -Force -AsPlainText
+          $cert = Get-PfxCertificate -FilePath "cert.pfx" -Password $pwd
+          Set-AuthenticodeSignature -FilePath "target\${{ matrix.target }}\release\thatproject.exe" `
+            -Certificate $cert `
+            -TimestampServer "http://timestamp.digicert.com" `
+            -IncludeChain All
+        shell: pwsh
+      
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
