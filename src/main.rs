@@ -1,6 +1,6 @@
 mod cli;
 
-pub mod features;
+use thatproject::*;
 
 fn main() {
     cli::run();
