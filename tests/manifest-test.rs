@@ -10,19 +10,15 @@ where
   F: FnOnce(),
 {
   let _guard = TEST_LOCK.lock().unwrap();
-  
   let temp_dir = TempDir::new().unwrap();
-  let manifest_path = temp_dir.path().join("manifest.json");
   
-  unsafe {
-    std::env::set_var("MANIFEST_TEST_PATH", manifest_path.to_str().unwrap());
-  }
+  thatproject::config::set_project_dir(temp_dir.path().to_str().unwrap().to_string());
+  thatproject::config::set_manifest_filename("manifest.json".to_string());
   
   test_fn();
   
-  unsafe {
-    std::env::remove_var("MANIFEST_TEST_PATH");
-  }
+  thatproject::config::reset_project_dir();
+  thatproject::config::reset_manifest_filename();
 }
 
 #[test]
@@ -31,8 +27,7 @@ fn test_create_manifest() {
     let result = Manifest::create("test-project".to_string(), "A test project".to_string());
     assert!(result.is_ok(), "Failed to create manifest");
 
-    let manifest_path = std::env::var("MANIFEST_TEST_PATH").unwrap();
-    let content = fs::read_to_string(&manifest_path).unwrap();
+    let content = fs::read_to_string(thatproject::config::get_manifest_path()).unwrap();
     assert!(content.contains("test-project"));
     assert!(content.contains("A test project"));
   });
