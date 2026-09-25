@@ -8,7 +8,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
-    cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
   };
 
   outputs = { self, nixpkgs, rust-overlay, flake-utils }:
@@ -27,6 +26,8 @@
             "rustfmt"
           ];
         };
+        
+        cargoToml = builtins.fromTOML (builtins.readFile ./Cargo.toml);
       in
       {
         devShells.default = pkgs.mkShell {
@@ -43,13 +44,13 @@
             ";
           '';
         };
+
+        packages.default = pkgs.rustPlatform.buildRustPackage {
+          pname = cargoToml.package.name;
+          version = cargoToml.package.version;
+          src = ./.;
+          cargoLock.lockFile = ./Cargo.lock;
+        };
       }
     );
-
-    packages.default = pkgs.rustPlatform.buildRustPackage {
-      pname = cargoToml.package.name;
-      version = cargoToml.package.version;
-      src = ./.;
-      cargoLock.lockFile = ./Cargo.lock;
-    };
 }
