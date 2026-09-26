@@ -19,11 +19,19 @@ impl TaskFile {
       slug,
       description,
     };
+    
+    task_file.write()
+  }
+
+  fn file_path(&self) -> String {
     let dir = crate::config::get_taskfile_dir();
-    let path = format!("{}/{}.task", dir, task_file.slug);
-    let json = serde_json::to_string_pretty(&task_file).map_err(|e| {
+    format!("{}/{}.task", dir, self.slug)
+  }
+
+  fn write(&self) -> std::io::Result<()> {
+    let json = serde_json::to_string_pretty(&self).map_err(|e| {
       std::io::Error::new(std::io::ErrorKind::InvalidData, e)
     })?;
-    fs::write(&path, json)
+    fs::write(&self.file_path(), json)
   }
 }
