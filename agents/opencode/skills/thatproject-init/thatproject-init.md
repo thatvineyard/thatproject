@@ -1,31 +1,29 @@
 ---
 name: thatproject-init
-description: Initialize a new project with name and description
+description: Initialize a ThatProject workspace
 ---
-
+          
 # thatproject-init
 
-Initialize a new project using the `init` command.
+Use the following subcommand of `thatproject` to manage a thatproject project. E.g. if the subcommand is `init` then run `thatproject init`
 
-## Usage
+## `init`
 
-```bash
-thatproject init --name <NAME> [--description <DESCRIPTION>]
-```
+Creates the necessary files and directories to enable this directory as a thatproject project.
 
-## Arguments
+**Usage:** `init [OPTIONS] --name <NAME>`
 
-- `--name` (required): The name of the project being initialized
-- `--description` (optional, default: empty string): A description for the project
+###### **Options:**
 
-## Functionality
+* `-n`, `--name <NAME>`
+* `-d`, `--description <DESCRIPTION>`
 
-Creates a the necessary project files under .thatproject
+  Default value: ``
+* `--task-dir <TASK_DIR>`
 
-## Example
+  Default value: `tasks`
 
-```bash
-thatproject init --name my-project --description "A sample project"
-```
 
-This initializes a new project named "my-project" with the given description.
+
+
+          

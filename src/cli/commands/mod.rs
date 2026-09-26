@@ -13,6 +13,9 @@ pub enum Commands {
     #[arg(short, long, default_value = "world")]
     name: String,
   },
+
+  /// Initialize a ThatProject workspace.
+  #[command(long_about = "Creates the necessary files and directories to enable this directory as a thatproject project.")]
   Init {
     #[arg(short, long)]
     name: String,
@@ -21,16 +24,25 @@ pub enum Commands {
     #[arg(long, default_value = "tasks")]
     task_dir: String,
   },
+  
+  // Adds a source to the project
+  #[command(long_about = "Add a source directory to the manifest so it can be included in source commands.")]
   AddSource {
     #[arg(short, long)]
     source: String,
   },
+
+  // Adds a task to the project
+  #[command(long_about = "Creates a task file in the task folder defined in the manifest.")]
   TaskAdd {
     #[arg(short, long)]
     name: String,
     #[arg(short, long, default_value = "")]
     description: String,
   },
+
+  // Sets the status of a given task
+  #[command(long_about = "Sets the status field in the task file.")]
   TaskSetStatus {
     #[arg(short, long)]
     name: String,

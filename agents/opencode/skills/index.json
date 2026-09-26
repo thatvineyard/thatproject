@@ -1,9 +1,39 @@
 {
   "skills": [
     {
+      "name": "thatproject-greet",
+      "version": "1",
+      "files": [
+        "thatproject-greet.md"
+      ]
+    },
+    {
       "name": "thatproject-init",
       "version": "1",
-      "files": ["thatproject-init.md"]
+      "files": [
+        "thatproject-init.md"
+      ]
+    },
+    {
+      "name": "thatproject-add-source",
+      "version": "1",
+      "files": [
+        "thatproject-add-source.md"
+      ]
+    },
+    {
+      "name": "thatproject-task-add",
+      "version": "1",
+      "files": [
+        "thatproject-task-add.md"
+      ]
+    },
+    {
+      "name": "thatproject-task-set-status",
+      "version": "1",
+      "files": [
+        "thatproject-task-set-status.md"
+      ]
     }
   ]
 }

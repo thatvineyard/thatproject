@@ -1,4 +1,4 @@
-use thatproject::features::tasks::taskfile::TaskStatus;
+use crate::features::tasks::taskfile::TaskStatus;
 
 use crate::app_context::AppContext;
 

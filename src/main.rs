@@ -1,5 +1,3 @@
-mod cli;
-
 use thatproject::*;
 
 fn main() {

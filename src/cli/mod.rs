@@ -1,12 +1,14 @@
 mod commands;
 
+use clap::Command;
 use commands::Commands;
 use clap::Parser;
+use clap::CommandFactory;
 
 use crate::app_context;
 
 #[derive(Parser, Debug)]
-#[command(name = "rust-cli", version, about = "ThatProject")]
+#[command(name = "thatproject", version, about = "ThatProject")]
 struct Cli {
     #[arg(short, long, global = true)]
     context_dir: Option<String>,
@@ -24,6 +26,10 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     let context = app_context::load()?;
 
     cli.commands.run(&context);
-    
+
     Ok(())
+}
+
+pub fn command() -> Command {
+    Cli::command()
 }

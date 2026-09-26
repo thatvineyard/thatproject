@@ -1,0 +1,27 @@
+---
+name: thatproject-task-set-status
+description: 
+---
+          
+# thatproject-task-set-status
+
+Use the following subcommand of `thatproject` to manage a thatproject project. E.g. if the subcommand is `init` then run `thatproject init`
+
+## `task-set-status`
+
+Sets the status field in the task file.
+
+**Usage:** `task-set-status --name <NAME> --status <STATUS>`
+
+###### **Options:**
+
+* `-n`, `--name <NAME>`
+* `-s`, `--status <STATUS>`
+
+  Possible values: `draft`, `ongoing`, `complete`
+
+
+
+
+
+          
