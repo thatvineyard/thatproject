@@ -34,12 +34,7 @@ impl Commands {
     match self {
       Commands::Greet { name } => greet::run(name),
       Commands::Init { name, description } => init::run(name, description),
-      Commands::AddSource { source } => {
-        if let Err(e) = add_source::run(source) {
-          eprintln!("Error: {}", e);
-          std::process::exit(1);
-        }
-      },
+      Commands::AddSource { source } => add_source::run(source),
       Commands::AddTask { name, description } => add_task::run(name, description),
     }
   }

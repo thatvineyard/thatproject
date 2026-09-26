@@ -1,11 +1,15 @@
 use std::path::Path;
 
-pub fn run(directory: String) -> Result<(), Box<dyn std::error::Error>> {
+pub fn run(directory: String) {
   if !Path::new(&directory).exists() {
-    return Err(format!("Directory does not exist: {}", directory).into());
+    eprintln!("Error: {}", format!("Directory does not exist: {}", directory));
+    std::process::exit(1);
   }
 
-  crate::manifest::Manifest::add_source(directory.clone())?;
+  if let Err(err) = crate::manifest::Manifest::add_source(directory.clone()) {
+    eprintln!("Error: {}", err);
+    std::process::exit(1);
+  }
+
   println!("Source added: {}", directory);
-  Ok(())
 }
