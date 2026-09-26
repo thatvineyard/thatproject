@@ -1,6 +1,6 @@
 ---
 name: thatproject-task-add
-description: 
+description: Adds a task to the project
 ---
           
 # thatproject-task-add

@@ -1,13 +1,6 @@
 {
   "skills": [
     {
-      "name": "thatproject-greet",
-      "version": "1",
-      "files": [
-        "thatproject-greet.md"
-      ]
-    },
-    {
       "name": "thatproject-init",
       "version": "1",
       "files": [

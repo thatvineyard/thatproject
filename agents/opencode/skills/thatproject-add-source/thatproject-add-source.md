@@ -1,6 +1,6 @@
 ---
 name: thatproject-add-source
-description: 
+description: Adds a source to the project
 ---
           
 # thatproject-add-source

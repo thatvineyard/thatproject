@@ -1,6 +1,6 @@
 ---
 name: thatproject-task-set-status
-description: 
+description: Sets the status of a given task
 ---
           
 # thatproject-task-set-status
