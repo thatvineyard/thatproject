@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::fs;
 use super::slug::slugify;
+use crate::app_context::AppContext; 
 
 const FILE_EXT: &str = ".json";
 
@@ -12,7 +13,7 @@ pub struct TaskFile {
 }
 
 impl TaskFile {
-  pub fn create(name: String, description: String) -> std::io::Result<()> {
+  pub fn create(context: &AppContext, name: String, description: String) -> std::io::Result<()> {
 
     let slug = slugify(&name);
 
@@ -22,18 +23,18 @@ impl TaskFile {
       description,
     };
 
-    task_file.write()
+    task_file.write(context)
   }
 
-  fn file_path(&self) -> String {
-    let dir = crate::config::get_taskfile_dir();
-    format!("{}/{}{}", dir, self.slug, FILE_EXT)
+  fn file_path(&self, context: &AppContext) -> std::io::Result<String> {
+    let dir = context.get_taskfile_dir()?;
+    Ok(format!("{}/{}{}", dir, self.slug, FILE_EXT))
   }
 
-  fn write(&self) -> std::io::Result<()> {
+  fn write(&self, context: &AppContext) -> std::io::Result<()> {
     let json = serde_json::to_string_pretty(&self).map_err(|e| {
       std::io::Error::new(std::io::ErrorKind::InvalidData, e)
     })?;
-    fs::write(&self.file_path(), json)
+    fs::write(&self.file_path(context)?, json)
   }
 }

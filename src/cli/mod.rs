@@ -3,6 +3,8 @@ mod commands;
 use commands::Commands;
 use clap::Parser;
 
+use crate::app_context;
+
 #[derive(Parser, Debug)]
 #[command(name = "rust-cli", version, about = "ThatProject")]
 struct Cli {
@@ -12,12 +14,16 @@ struct Cli {
     commands: Commands,
 }
 
-pub fn run() {
+pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
     if let Some(dir) = cli.context_dir {
         crate::config::set_project_dir(dir);
     }
 
-    cli.commands.run();
+    let context = app_context::load()?;
+
+    cli.commands.run(&context);
+    
+    Ok(())
 }

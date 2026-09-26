@@ -4,7 +4,6 @@ use std::cell::RefCell;
 
 const DEFAULT_MANIFEST_FILENAME: &str = "manifest.json";
 const DEFAULT_PROJECT_DIR: &str = ".thatproject";
-const DEFAULT_TASKFILE_SUBDIR: &str = "tasks";
 
 // PROJECT DIR
 
@@ -18,7 +17,7 @@ pub fn set_project_dir(dir: String) {
   })
 }
 
-fn get_project_dir() -> String {
+pub fn get_project_dir() -> String {
   PROJECT_DIR.with(|d| d.borrow().clone())
 }
 
@@ -55,33 +54,3 @@ pub fn reset_manifest_filename() {
 pub fn get_manifest_path() -> String {
   format!("{}/{}",  get_project_dir(), get_filename())
 }
-
-// TASKFILE SUBDIR
-
-thread_local! {
-  static TASKFILE_SUBDIR: RefCell<String> = RefCell::new(DEFAULT_TASKFILE_SUBDIR.to_string());
-}
-
-pub fn set_taskfile_subdir(dir: String) {
-  TASKFILE_SUBDIR.with(|d| {
-    *d.borrow_mut() = dir;
-  })
-}
-
-fn get_taskfile_subdir() -> String {
-  TASKFILE_SUBDIR.with(|d| d.borrow().clone())
-}
-
-pub fn reset_taskfile_subdir() {
-  TASKFILE_SUBDIR.with(|f| {
-    *f.borrow_mut() = DEFAULT_TASKFILE_SUBDIR.to_string();
-  })
-}
-
-// TASKFILE DIR
-
-pub fn get_taskfile_dir() -> String {
-  format!("{}/{}",  get_project_dir(), get_taskfile_subdir())
-}
-
-
