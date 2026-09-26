@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use super::slug::slugify;
 
+const FILE_EXT: &str = ".json";
+
 #[derive(Debug, Deserialize, Serialize)]
 pub struct TaskFile {
   pub name: String,
@@ -19,13 +21,13 @@ impl TaskFile {
       slug,
       description,
     };
-    
+
     task_file.write()
   }
 
   fn file_path(&self) -> String {
     let dir = crate::config::get_taskfile_dir();
-    format!("{}/{}.task", dir, self.slug)
+    format!("{}/{}{}", dir, self.slug, FILE_EXT)
   }
 
   fn write(&self) -> std::io::Result<()> {
