@@ -1,6 +1,7 @@
 mod greet;
 mod init; 
 mod add_source;
+mod add_task;
 
 use clap::Subcommand;
 
@@ -20,6 +21,12 @@ pub enum Commands {
     #[arg(short, long)]
     source: String,
   },
+  AddTask {
+    #[arg(short, long)]
+    name: String,
+    #[arg(short, long, default_value = "")]
+    description: String,
+  },
 }
 
 impl Commands {
@@ -32,7 +39,8 @@ impl Commands {
           eprintln!("Error: {}", e);
           std::process::exit(1);
         }
-      }
+      },
+      Commands::AddTask { name, description } => add_task::run(name, description),
     }
   }
 }
