@@ -45,6 +45,12 @@ fn generate_agent_skills() -> std::io::Result<()> {
             .get_about()
             .map(ToString::to_string)
             .unwrap_or_default();
+        let git_rev = std::process::Command::new("git")
+          .args(["rev-parse", "HEAD"])
+          .output()?;
+        let hash = String::from_utf8_lossy(&git_rev.stdout)
+            .trim()
+            .to_owned();
 
         let markdown_options = clap_markdown::MarkdownOptions::new()
             .title(skill_name.clone())
@@ -82,7 +88,7 @@ description: {description}
 
         skills.push(SkillEntry {
             name: skill_name,
-            version: "1".to_owned(),
+            version: hash,
             files: vec![file_name],
         });
     }
