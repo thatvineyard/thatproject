@@ -2,30 +2,37 @@
   "skills": [
     {
       "name": "thatproject-init",
-      "version": "efc5a7df75362f405eab707e97a219015a021417",
+      "version": "037e5e9625a2ce1195e02d348ecd55841c439645",
       "files": [
         "thatproject-init.md"
       ]
     },
     {
       "name": "thatproject-add-source",
-      "version": "efc5a7df75362f405eab707e97a219015a021417",
+      "version": "037e5e9625a2ce1195e02d348ecd55841c439645",
       "files": [
         "thatproject-add-source.md"
       ]
     },
     {
       "name": "thatproject-task-add",
-      "version": "efc5a7df75362f405eab707e97a219015a021417",
+      "version": "037e5e9625a2ce1195e02d348ecd55841c439645",
       "files": [
         "thatproject-task-add.md"
       ]
     },
     {
       "name": "thatproject-task-set-status",
-      "version": "efc5a7df75362f405eab707e97a219015a021417",
+      "version": "037e5e9625a2ce1195e02d348ecd55841c439645",
       "files": [
         "thatproject-task-set-status.md"
+      ]
+    },
+    {
+      "name": "thatproject-task-list",
+      "version": "037e5e9625a2ce1195e02d348ecd55841c439645",
+      "files": [
+        "thatproject-task-list.md"
       ]
     }
   ]

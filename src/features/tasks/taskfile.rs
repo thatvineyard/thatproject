@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde;
+use core::fmt;
 use std::error::Error;
 use crate::tools::{self, frontmatter}; 
 
@@ -9,6 +10,18 @@ pub enum TaskStatus {
   Draft,
   Ongoing,
   Complete,
+}
+
+impl fmt::Display for TaskStatus {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    let label = match self {
+      Self::Draft => "Draft",
+      Self::Ongoing => "Ongoing",
+      Self::Complete => "Complete",
+    };
+
+    f.write_str(label)
+  }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -45,6 +58,10 @@ impl TaskFile {
 
   pub fn to_data(&self) -> Result<String, Box<dyn Error>> {
     Ok(tools::frontmatter::to_frontmatter_markdown(&self.header, &self.body)?)
+  }
+
+  pub fn to_one_liner(&self) -> std::string::String {
+    format!("{} [{}]: {}", self.header.name, self.header.status, self.header.description)
   }
 
   pub fn name(&self) -> std::string::String {

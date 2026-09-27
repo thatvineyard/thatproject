@@ -21,6 +21,29 @@ pub fn load(context: &AppContext, name: String) -> Result<TaskFile, Box<dyn Erro
     Ok(result)
 }
 
+pub fn list(context: &AppContext) -> Result<Vec<TaskFile>, Box<dyn Error>> {
+  let dir = context.get_taskfile_dir()?;
+  
+  let tasks = fs::read_dir(dir)?
+    .map(|entry| -> Result<Option<TaskFile>, Box<dyn Error>> {
+      let path = entry?.path();
+
+      if !path.is_file() || !path.extension().is_some_and(|ext| ext != FILE_EXT) {
+        return Ok(None);
+      }
+      let data = fs::read_to_string(path)?;
+      let result = TaskFile::from_data(data)?;
+
+      Ok(Some(result))
+    })
+    .collect::<Result<Vec<_>, _>>()?
+    .into_iter()
+    .flatten()
+    .collect();
+
+  Ok(tasks)
+}
+
 fn file_path(context: &AppContext, name: &String) -> Result<String, Box<dyn Error>> {
     let slug = slugify(name);
     let dir = context.get_taskfile_dir()?;

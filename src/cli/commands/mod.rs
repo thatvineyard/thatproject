@@ -43,6 +43,10 @@ pub enum Commands {
     #[arg(short, long, value_enum, ignore_case = true)]
     status: TaskStatusArg,
   },
+
+  /// Lists all tasks
+  #[command()]
+  TaskList {},
 }
 
 impl Commands {
@@ -52,6 +56,7 @@ impl Commands {
       Commands::AddSource { source } => add_source::run(context, source),
       Commands::TaskAdd { name, description } => task::add::run(context, name, description),
       Commands::TaskSetStatus { name, status } => task::set_status::run(context, name, status),
+      Commands::TaskList {} => task::list::run(context),
     }
   }
 }

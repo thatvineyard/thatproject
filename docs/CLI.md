@@ -9,6 +9,7 @@ This document contains the help content for the `thatproject` command-line progr
 * [`thatproject add-source`↴](#thatproject-add-source)
 * [`thatproject task-add`↴](#thatproject-task-add)
 * [`thatproject task-set-status`↴](#thatproject-task-set-status)
+* [`thatproject task-list`↴](#thatproject-task-list)
 
 ## `thatproject`
 
@@ -22,6 +23,7 @@ ThatProject
 * `add-source` — Adds a source to the project
 * `task-add` — Adds a task to the project
 * `task-set-status` — Sets the status of a given task
+* `task-list` — Lists all tasks
 
 ###### **Options:**
 
@@ -88,6 +90,14 @@ Sets the status field in the task file.
 
   Possible values: `draft`, `ongoing`, `complete`
 
+
+
+
+## `thatproject task-list`
+
+Lists all tasks
+
+**Usage:** `thatproject task-list`
 
 
 
