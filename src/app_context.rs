@@ -1,13 +1,13 @@
 
 use crate::manifest::Manifest;
 
-enum ProjectState {
+pub enum ProjectState {
     Valid(ValidatedManifest),
     Unset,
 }
 
 pub struct AppContext {
-    project: ProjectState,
+    pub project: ProjectState,
 }
 
 impl AppContext {
@@ -23,7 +23,7 @@ impl AppContext {
     }
 }
 
-struct ValidatedManifest {
+pub struct ValidatedManifest {
   manifest: Manifest,
 }
 
