@@ -32,7 +32,14 @@ struct SkillEntry {
     files: Vec<String>,
 }
 
-fn generate_agent_skills() -> std::io::Result<()> {
+
+#[derive(serde::Serialize)]
+struct SkillHeader {
+    name: String,
+    description: String, 
+}
+
+fn generate_agent_skills() -> std::result::Result<(), Box<dyn std::error::Error>> {
     let root_command = thatproject::cli::command();
     fs::create_dir_all(SKILLS_DIR)?;
 
@@ -66,19 +73,9 @@ fn generate_agent_skills() -> std::io::Result<()> {
         let intro = format!("Use the following subcommand of `thatproject` to manage a thatproject project. E.g. if the subcommand is `init` then run `thatproject init`");
         let markdown = markdown.replacen(&intro_to_be_replaced, &intro, 1);
 
-        let frontmatter = format!(
-            r#"---
-name: {skill_name}
-description: {description}
----"#
-        );
+        let frontmatter = thatproject::tools::frontmatter::frontmatter_header(&SkillHeader { name: skill_name.clone(), description})?;
 
-        let content = format!(
-            r#"{frontmatter}
-          
-{markdown}
-          "#
-        );
+        let content = format!("{frontmatter}\n{markdown}");
 
         let dir = format!("{}/{}", SKILLS_DIR, skill_name);
         let file_name = format!("{}.md", skill_name);

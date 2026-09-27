@@ -3,3 +3,4 @@ pub mod manifest;
 pub mod features;
 pub mod app_context;
 pub mod cli;
+pub mod tools;
