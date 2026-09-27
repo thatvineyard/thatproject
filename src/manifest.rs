@@ -31,6 +31,7 @@ impl Manifest {
     let json = serde_json::to_string_pretty(&manifest).map_err(|e| {
       std::io::Error::new(std::io::ErrorKind::InvalidData, e)
     })?;
+    fs::create_dir_all(crate::config::get_project_dir())?;
     fs::write(&path, json)
   }
 
