@@ -31,3 +31,14 @@ Enable the ThatProject skills by adding this to your OpenCode config:
   "https://raw.githubusercontent.com/thatvineyard/thatproject/refs/heads/main/agents/opencode/skills"
 ]
 ```
+
+
+## Build tools
+
+To build agent skill files run:
+
+`cargo xtask agent-skills`
+
+To build CLI docs run:
+
+`cargo xtask agent-skills`

@@ -5,7 +5,6 @@ This document contains the help content for the `thatproject` command-line progr
 **Command Overview:**
 
 * [`thatproject`↴](#thatproject)
-* [`thatproject greet`↴](#thatproject-greet)
 * [`thatproject init`↴](#thatproject-init)
 * [`thatproject add-source`↴](#thatproject-add-source)
 * [`thatproject task-add`↴](#thatproject-task-add)
@@ -19,31 +18,21 @@ ThatProject
 
 ###### **Subcommands:**
 
-* `greet` — 
-* `init` — 
-* `add-source` — 
-* `task-add` — 
-* `task-set-status` — 
+* `init` — Initialize a ThatProject workspace
+* `add-source` — Adds a source to the project
+* `task-add` — Adds a task to the project
+* `task-set-status` — Sets the status of a given task
 
 ###### **Options:**
 
 * `-c`, `--context-dir <CONTEXT_DIR>`
-
-
-
-## `thatproject greet`
-
-**Usage:** `thatproject greet [OPTIONS]`
-
-###### **Options:**
-
-* `-n`, `--name <NAME>`
-
-  Default value: `world`
+* `-a`, `--agent-mode`
 
 
 
 ## `thatproject init`
+
+Creates the necessary files and directories to enable this directory as a thatproject project.
 
 **Usage:** `thatproject init [OPTIONS] --name <NAME>`
 
@@ -61,6 +50,8 @@ ThatProject
 
 ## `thatproject add-source`
 
+Add a source directory to the manifest so it can be included in source commands.
+
 **Usage:** `thatproject add-source --source <SOURCE>`
 
 ###### **Options:**
@@ -70,6 +61,8 @@ ThatProject
 
 
 ## `thatproject task-add`
+
+Creates a task file in the task folder defined in the manifest.
 
 **Usage:** `thatproject task-add [OPTIONS] --name <NAME>`
 
@@ -83,6 +76,8 @@ ThatProject
 
 
 ## `thatproject task-set-status`
+
+Sets the status field in the task file.
 
 **Usage:** `thatproject task-set-status --name <NAME> --status <STATUS>`
 
