@@ -2,6 +2,11 @@ use std::fs;
 
 const SKILLS_DIR: &'static str = "agents/opencode/skills";
 const SKILLS_INDEX_FILENAME: &'static str = "index.json";
+const SKILLS_INTO: &'static str =  concat!(
+    "Use the following subcommand of `thatproject` to manage a thatproject project. ",
+    "Always run with --agent-mode as a global flag.",
+    "E.g. if the subcommand is `init` then run `thatproject --agent-mode init`",
+);
 
 #[derive(serde::Serialize)]
 struct SkillsIndex {
@@ -53,8 +58,8 @@ pub fn generate_agent_skills() -> std::result::Result<(), Box<dyn std::error::Er
         let intro_to_be_replaced = format!(
             "This document contains the help content for the `{command_name}` command-line program."
         );
-        let intro = format!("Use the following subcommand of `thatproject` to manage a thatproject project. E.g. if the subcommand is `init` then run `thatproject init`");
-        let markdown = markdown.replacen(&intro_to_be_replaced, &intro, 1);
+
+        let markdown = markdown.replacen(&intro_to_be_replaced, SKILLS_INTO, 1);
 
         let frontmatter = thatproject::tools::frontmatter::frontmatter_header(&SkillHeader { name: skill_name.clone(), description})?;
 

@@ -8,6 +8,7 @@ pub enum ProjectState {
 
 pub struct AppContext {
     pub project: ProjectState,
+    _agent_mode: bool,
 }
 
 impl AppContext {
@@ -27,18 +28,19 @@ pub struct ValidatedManifest {
   manifest: Manifest,
 }
 
-pub fn load() -> Result<AppContext, std::io::Error> {
+pub fn load(agent_mode: bool) -> Result<AppContext, std::io::Error> {
   let manifest = match Manifest::load() {
     Ok(manifest) => manifest,
 
     Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
-      return Ok(AppContext { project: ProjectState::Unset });
+      return Ok(AppContext { project: ProjectState::Unset, _agent_mode: agent_mode });
     }
 
     Err(error) => return Err(error),
   };
 
   Ok(AppContext { 
-    project: ProjectState::Valid(ValidatedManifest { manifest }) 
+    project: ProjectState::Valid(ValidatedManifest { manifest }),
+    _agent_mode: agent_mode,
   })
 }
