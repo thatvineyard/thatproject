@@ -22,22 +22,23 @@ pub struct TaskFile {
 }
 
 impl TaskFile {
-  pub fn create(context: &AppContext, name: String, description: String) -> std::io::Result<()> {
+  pub fn create(context: &AppContext, name: String, description: String) -> std::io::Result<TaskFile> {
     let task_file = TaskFile {
       name,
       description,
       status: TaskStatus::Draft,
     };
 
-    task_file.write(context)
+    let _ = task_file.write(context);
+    Ok(task_file)
   }
 
   pub fn load(context: &AppContext, name: String) -> std::io::Result<Self> {
-    let path = TaskFile::file_path(context, &name)?;
-    let json = fs::read_to_string(path)?;
-    serde_json::from_str(&json).map_err(|e| {
-      std::io::Error::new(std::io::ErrorKind::InvalidData, e)
-    })
+      let path = TaskFile::file_path(context, &name)?;
+      let json = fs::read_to_string(path)?;
+      serde_json::from_str(&json).map_err(|e| {
+          std::io::Error::new(std::io::ErrorKind::InvalidData, e)
+      })
   }
 
   fn file_path(context: &AppContext, name: &String) -> std::io::Result<String> {
@@ -50,6 +51,7 @@ impl TaskFile {
     let json = serde_json::to_string_pretty(&self).map_err(|e| {
       std::io::Error::new(std::io::ErrorKind::InvalidData, e)
     })?;
+    fs::create_dir_all(context.get_taskfile_dir()?)?;
     fs::write(&TaskFile::file_path(context, &self.name)?, json)
   }
 }
