@@ -1,5 +1,7 @@
 use std::fs;
 
+use thatproject::tools::frontmatter::to_frontmatter_markdown;
+
 const SKILLS_DIR: &'static str = "agents/opencode/skills";
 const SKILLS_INDEX_FILENAME: &'static str = "index.json";
 const SKILLS_INTO: &'static str =  concat!(
@@ -61,9 +63,7 @@ pub fn generate_agent_skills() -> std::result::Result<(), Box<dyn std::error::Er
 
         let markdown = markdown.replacen(&intro_to_be_replaced, SKILLS_INTO, 1);
 
-        let frontmatter = thatproject::tools::frontmatter::frontmatter_header(&SkillHeader { name: skill_name.clone(), description})?;
-
-        let content = format!("{frontmatter}\n{markdown}");
+        let content = to_frontmatter_markdown(&SkillHeader { name: skill_name.clone(), description}, &markdown)?;
 
         let dir = format!("{}/{}", SKILLS_DIR, skill_name);
         let file_name = format!("{}.md", skill_name);

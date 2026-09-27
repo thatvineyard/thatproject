@@ -9,7 +9,7 @@ pub fn create_task(context: &AppContext, name: String, description: String) -> R
 
 pub fn set_status(context: &AppContext, name: String, status: TaskStatus) -> Result<(), Box<dyn std::error::Error>> {
   let mut task = taskfile::TaskFile::load(context, name)?;
-  task.status = status;
+  task.header.status = status;
   task.write(context)?;
   Ok(())
 }
