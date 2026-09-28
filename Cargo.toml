@@ -17,3 +17,6 @@ tempfile = "3.8"
 [workspace]
 members = ["xtask"]
 resolver = "3"
+
+[build-dependencies]
+husky-rs = "0.4.0"

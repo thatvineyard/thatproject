@@ -1,9 +1,9 @@
 mod commands;
 
 use clap::Command;
-use commands::Commands;
-use clap::Parser;
 use clap::CommandFactory;
+use clap::Parser;
+use commands::Commands;
 
 use crate::app_context;
 

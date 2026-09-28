@@ -4,7 +4,7 @@ use thatproject::tools::frontmatter::to_frontmatter_markdown;
 
 const SKILLS_DIR: &'static str = "agents/opencode/skills";
 const SKILLS_INDEX_FILENAME: &'static str = "index.json";
-const SKILLS_INTO: &'static str =  concat!(
+const SKILLS_INTO: &'static str = concat!(
     "Use the following subcommand of `thatproject` to manage a thatproject project. ",
     "Always run with --agent-mode as a global flag.",
     "E.g. if the subcommand is `init` then run `thatproject --agent-mode init`",
@@ -22,11 +22,10 @@ struct SkillEntry {
     files: Vec<String>,
 }
 
-
 #[derive(serde::Serialize)]
 struct SkillHeader {
     name: String,
-    description: String, 
+    description: String,
 }
 
 pub fn generate_agent_skills() -> std::result::Result<(), Box<dyn std::error::Error>> {
@@ -43,11 +42,9 @@ pub fn generate_agent_skills() -> std::result::Result<(), Box<dyn std::error::Er
             .map(ToString::to_string)
             .unwrap_or_default();
         let git_rev = std::process::Command::new("git")
-          .args(["rev-parse", "HEAD"])
-          .output()?;
-        let hash = String::from_utf8_lossy(&git_rev.stdout)
-            .trim()
-            .to_owned();
+            .args(["rev-parse", "HEAD"])
+            .output()?;
+        let hash = String::from_utf8_lossy(&git_rev.stdout).trim().to_owned();
 
         let markdown_options = clap_markdown::MarkdownOptions::new()
             .title(skill_name.clone())
@@ -63,7 +60,13 @@ pub fn generate_agent_skills() -> std::result::Result<(), Box<dyn std::error::Er
 
         let markdown = markdown.replacen(&intro_to_be_replaced, SKILLS_INTO, 1);
 
-        let content = to_frontmatter_markdown(&SkillHeader { name: skill_name.clone(), description}, &markdown)?;
+        let content = to_frontmatter_markdown(
+            &SkillHeader {
+                name: skill_name.clone(),
+                description,
+            },
+            &markdown,
+        )?;
 
         let dir = format!("{}/{}", SKILLS_DIR, skill_name);
         let file_name = format!("{}.md", skill_name);
