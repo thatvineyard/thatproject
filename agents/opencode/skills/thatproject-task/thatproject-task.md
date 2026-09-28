@@ -12,6 +12,7 @@ Use the following subcommand of `thatproject` to manage a thatproject project. A
 
 ###### **Subcommands:**
 
+* `set-body` — Sets the body of a given task
 * `set-status` — Sets the status of a given task
 * `read` — Reads the given task
 
@@ -21,9 +22,21 @@ Use the following subcommand of `thatproject` to manage a thatproject project. A
 
 
 
+## `task set-body`
+
+Sets the body in the task file.
+
+**Usage:** `task set-body <BODY>`
+
+###### **Arguments:**
+
+* `<BODY>`
+
+
+
 ## `task set-status`
 
-Sets the status field in the task file.
+Sets the status field in the task file header.
 
 **Usage:** `task set-status <STATUS>`
 
