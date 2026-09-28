@@ -1,0 +1,27 @@
+name: Generate and commit docs
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo xtask docs
+      - run: cargo xtask agent-skills
+      - name: Commit docs
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add docs
+          git diff --quiet --cached || git commit -m "docs: regenerate [gha]"
+      - name: Commit agents
+        run: |
+          git add agents
+          # only commit if changes in other files than index.json
+          git diff --quiet --cached -- agents --exclude=agents/index.json || git commit -m "docs: regenerate agent skills [gha]"
+      - name: Push
+        run: git push
