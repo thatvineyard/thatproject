@@ -63,11 +63,15 @@ impl TaskFile {
         )?)
     }
 
-    pub fn to_one_liner(&self) -> std::string::String {
+    pub fn to_one_liner(&self) -> String {
         format!(
             "{} [{}]: {}",
             self.header.name, self.header.status, self.header.description
         )
+    }
+
+    pub fn to_json(&self) -> Result<String, Box<dyn Error>> {
+        Ok(serde_json::to_string(self)?)
     }
 
     pub fn name(&self) -> std::string::String {

@@ -7,7 +7,7 @@ pub enum ProjectState {
 
 pub struct AppContext {
     pub project: ProjectState,
-    _agent_mode: bool,
+    pub agent_mode: bool,
 }
 
 impl AppContext {
@@ -34,7 +34,7 @@ pub fn load(agent_mode: bool) -> Result<AppContext, std::io::Error> {
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
             return Ok(AppContext {
                 project: ProjectState::Unset,
-                _agent_mode: agent_mode,
+                agent_mode,
             });
         }
 
@@ -43,6 +43,6 @@ pub fn load(agent_mode: bool) -> Result<AppContext, std::io::Error> {
 
     Ok(AppContext {
         project: ProjectState::Valid(ValidatedManifest { manifest }),
-        _agent_mode: agent_mode,
+        agent_mode,
     })
 }

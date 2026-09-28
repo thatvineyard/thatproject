@@ -47,3 +47,7 @@ pub fn list(context: &AppContext) -> Result<(), Box<dyn Error>> {
 
     Ok(())
 }
+
+pub fn read(context: &AppContext, name: String) -> Result<TaskFile, Box<dyn Error>> {
+    Ok(store::load(context, name)?)
+}

@@ -1,3 +1,4 @@
+mod read;
 mod set_status;
 
 use crate::{app_context::AppContext, cli::commands::task::set_status::TaskStatusArg};
@@ -10,6 +11,13 @@ pub enum TaskActions {
     SetStatus {
         #[arg(ignore_case = true)]
         status: TaskStatusArg,
+    },
+    /// Reads the given task
+    #[command(long_about = "Output the contents of the file")]
+    Read {
+        // Output in json. (Always enabled if --agent-mode is true)
+        #[arg(long)]
+        json: bool,
     },
 }
 
@@ -26,6 +34,7 @@ impl TaskCommand {
     pub fn run(self, context: &AppContext) {
         match self.action {
             TaskActions::SetStatus { status } => set_status::run(context, self.name, status),
+            TaskActions::Read { json } => read::run(context, self.name, json),
         }
     }
 }
