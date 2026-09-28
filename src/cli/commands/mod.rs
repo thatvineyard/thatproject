@@ -1,10 +1,10 @@
 mod init; 
 mod add_source;
 mod task;
+mod tasks;
 
 use clap::Subcommand;
-use crate::app_context::AppContext;
-use crate::cli::commands::task::set_status::TaskStatusArg;
+use crate::{app_context::AppContext, cli::commands::{task::TaskCommand, tasks::TasksCommands}};
 
 #[derive(Subcommand, Debug)]
 pub enum Commands {
@@ -26,27 +26,12 @@ pub enum Commands {
     source: String,
   },
 
-  /// Adds a task to the project
-  #[command(long_about = "Creates a task file in the task folder defined in the manifest.")]
-  TaskAdd {
-    #[arg(short, long)]
-    name: String,
-    #[arg(short, long, default_value = "")]
-    description: String,
-  },
+  // Manage the collection of tasks
+  #[command(subcommand)]
+  Tasks(TasksCommands),
 
-  /// Sets the status of a given task
-  #[command(long_about = "Sets the status field in the task file.")]
-  TaskSetStatus {
-    #[arg(short, long)]
-    name: String,
-    #[arg(short, long, value_enum, ignore_case = true)]
-    status: TaskStatusArg,
-  },
-
-  /// Lists all tasks
-  #[command()]
-  TaskList {},
+  // Manage a specific task
+  Task(TaskCommand),
 }
 
 impl Commands {
@@ -54,9 +39,8 @@ impl Commands {
     match self {
       Commands::Init { name, description, task_dir } => init::run(context, name, description, task_dir),
       Commands::AddSource { source } => add_source::run(context, source),
-      Commands::TaskAdd { name, description } => task::add::run(context, name, description),
-      Commands::TaskSetStatus { name, status } => task::set_status::run(context, name, status),
-      Commands::TaskList {} => task::list::run(context),
+      Commands::Tasks(command) => command.run(context),
+      Commands::Task(command) => command.run(context),
     }
   }
 }

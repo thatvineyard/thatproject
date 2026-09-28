@@ -41,4 +41,4 @@ To build agent skill files run:
 
 To build CLI docs run:
 
-`cargo xtask agent-skills`
+`cargo xtask docs`

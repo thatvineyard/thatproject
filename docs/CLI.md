@@ -7,9 +7,11 @@ This document contains the help content for the `thatproject` command-line progr
 * [`thatproject`↴](#thatproject)
 * [`thatproject init`↴](#thatproject-init)
 * [`thatproject add-source`↴](#thatproject-add-source)
-* [`thatproject task-add`↴](#thatproject-task-add)
-* [`thatproject task-set-status`↴](#thatproject-task-set-status)
-* [`thatproject task-list`↴](#thatproject-task-list)
+* [`thatproject tasks`↴](#thatproject-tasks)
+* [`thatproject tasks add`↴](#thatproject-tasks-add)
+* [`thatproject tasks list`↴](#thatproject-tasks-list)
+* [`thatproject task`↴](#thatproject-task)
+* [`thatproject task set-status`↴](#thatproject-task-set-status)
 
 ## `thatproject`
 
@@ -21,9 +23,8 @@ ThatProject
 
 * `init` — Initialize a ThatProject workspace
 * `add-source` — Adds a source to the project
-* `task-add` — Adds a task to the project
-* `task-set-status` — Sets the status of a given task
-* `task-list` — Lists all tasks
+* `tasks` — 
+* `task` — 
 
 ###### **Options:**
 
@@ -62,11 +63,22 @@ Add a source directory to the manifest so it can be included in source commands.
 
 
 
-## `thatproject task-add`
+## `thatproject tasks`
+
+**Usage:** `thatproject tasks <COMMAND>`
+
+###### **Subcommands:**
+
+* `add` — Adds a task to the project
+* `list` — Lists all tasks
+
+
+
+## `thatproject tasks add`
 
 Creates a task file in the task folder defined in the manifest.
 
-**Usage:** `thatproject task-add [OPTIONS] --name <NAME>`
+**Usage:** `thatproject tasks add [OPTIONS] --name <NAME>`
 
 ###### **Options:**
 
@@ -77,27 +89,40 @@ Creates a task file in the task folder defined in the manifest.
 
 
 
-## `thatproject task-set-status`
-
-Sets the status field in the task file.
-
-**Usage:** `thatproject task-set-status --name <NAME> --status <STATUS>`
-
-###### **Options:**
-
-* `-n`, `--name <NAME>`
-* `-s`, `--status <STATUS>`
-
-  Possible values: `draft`, `ongoing`, `complete`
-
-
-
-
-## `thatproject task-list`
+## `thatproject tasks list`
 
 Lists all tasks
 
-**Usage:** `thatproject task-list`
+**Usage:** `thatproject tasks list`
+
+
+
+## `thatproject task`
+
+**Usage:** `thatproject task <NAME> <COMMAND>`
+
+###### **Subcommands:**
+
+* `set-status` — Sets the status of a given task
+
+###### **Arguments:**
+
+* `<NAME>`
+
+
+
+## `thatproject task set-status`
+
+Sets the status field in the task file.
+
+**Usage:** `thatproject task set-status <STATUS>`
+
+###### **Arguments:**
+
+* `<STATUS>`
+
+  Possible values: `draft`, `ongoing`, `complete`
+
 
 
 

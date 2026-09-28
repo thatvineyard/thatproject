@@ -2,37 +2,30 @@
   "skills": [
     {
       "name": "thatproject-init",
-      "version": "037e5e9625a2ce1195e02d348ecd55841c439645",
+      "version": "a16b0b305bd5a300b065db9dff46f0322d31b7eb",
       "files": [
         "thatproject-init.md"
       ]
     },
     {
       "name": "thatproject-add-source",
-      "version": "037e5e9625a2ce1195e02d348ecd55841c439645",
+      "version": "a16b0b305bd5a300b065db9dff46f0322d31b7eb",
       "files": [
         "thatproject-add-source.md"
       ]
     },
     {
-      "name": "thatproject-task-add",
-      "version": "037e5e9625a2ce1195e02d348ecd55841c439645",
+      "name": "thatproject-tasks",
+      "version": "a16b0b305bd5a300b065db9dff46f0322d31b7eb",
       "files": [
-        "thatproject-task-add.md"
+        "thatproject-tasks.md"
       ]
     },
     {
-      "name": "thatproject-task-set-status",
-      "version": "037e5e9625a2ce1195e02d348ecd55841c439645",
+      "name": "thatproject-task",
+      "version": "a16b0b305bd5a300b065db9dff46f0322d31b7eb",
       "files": [
-        "thatproject-task-set-status.md"
-      ]
-    },
-    {
-      "name": "thatproject-task-list",
-      "version": "037e5e9625a2ce1195e02d348ecd55841c439645",
-      "files": [
-        "thatproject-task-list.md"
+        "thatproject-task.md"
       ]
     }
   ]
