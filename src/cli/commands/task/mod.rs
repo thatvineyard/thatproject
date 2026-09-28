@@ -1,4 +1,5 @@
 mod read;
+mod set_body;
 mod set_status;
 
 use crate::{app_context::AppContext, cli::commands::task::set_status::TaskStatusArg};
@@ -6,8 +7,14 @@ use clap::{Args, Subcommand};
 
 #[derive(Subcommand, Debug)]
 pub enum TaskActions {
+    /// Sets the body of a given task
+    #[command(long_about = "Sets the body in the task file.")]
+    SetBody {
+        #[arg()]
+        body: String,
+    },
     /// Sets the status of a given task
-    #[command(long_about = "Sets the status field in the task file.")]
+    #[command(long_about = "Sets the status field in the task file header.")]
     SetStatus {
         #[arg(ignore_case = true)]
         status: TaskStatusArg,
@@ -33,6 +40,7 @@ pub struct TaskCommand {
 impl TaskCommand {
     pub fn run(self, context: &AppContext) {
         match self.action {
+            TaskActions::SetBody { body } => set_body::run(context, self.name, body),
             TaskActions::SetStatus { status } => set_status::run(context, self.name, status),
             TaskActions::Read { json } => read::run(context, self.name, json),
         }

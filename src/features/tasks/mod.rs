@@ -22,6 +22,13 @@ pub fn create_task(
     Ok(task_file)
 }
 
+pub fn set_body(context: &AppContext, name: String, body: String) -> Result<(), Box<dyn Error>> {
+    let mut task_file = tasks::store::load(context, name)?;
+    task_file.body = body;
+    tasks::store::store(context, &task_file)?;
+    Ok(())
+}
+
 pub fn set_status(
     context: &AppContext,
     name: String,
