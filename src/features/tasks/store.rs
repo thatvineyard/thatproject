@@ -32,9 +32,11 @@ pub fn list(context: &AppContext) -> Result<Vec<TaskFile>, Box<dyn Error>> {
         return Ok(None);
       }
       let data = fs::read_to_string(path)?;
-      let result = TaskFile::from_data(data)?;
-
-      Ok(Some(result))
+      let result = TaskFile::from_data(data);
+      match result {
+        Err(_) => Ok(None),
+        Ok(result) => Ok(Some(result))
+      }
     })
     .collect::<Result<Vec<_>, _>>()?
     .into_iter()
