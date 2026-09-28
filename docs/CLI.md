@@ -11,6 +11,7 @@ This document contains the help content for the `thatproject` command-line progr
 * [`thatproject tasks add`↴](#thatproject-tasks-add)
 * [`thatproject tasks list`↴](#thatproject-tasks-list)
 * [`thatproject task`↴](#thatproject-task)
+* [`thatproject task set-body`↴](#thatproject-task-set-body)
 * [`thatproject task set-status`↴](#thatproject-task-set-status)
 * [`thatproject task read`↴](#thatproject-task-read)
 
@@ -104,6 +105,7 @@ Lists all tasks
 
 ###### **Subcommands:**
 
+* `set-body` — Sets the body of a given task
 * `set-status` — Sets the status of a given task
 * `read` — Reads the given task
 
@@ -113,9 +115,21 @@ Lists all tasks
 
 
 
+## `thatproject task set-body`
+
+Sets the body in the task file.
+
+**Usage:** `thatproject task set-body <BODY>`
+
+###### **Arguments:**
+
+* `<BODY>`
+
+
+
 ## `thatproject task set-status`
 
-Sets the status field in the task file.
+Sets the status field in the task file header.
 
 **Usage:** `thatproject task set-status <STATUS>`
 
