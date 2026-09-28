@@ -12,6 +12,7 @@ This document contains the help content for the `thatproject` command-line progr
 * [`thatproject tasks list`↴](#thatproject-tasks-list)
 * [`thatproject task`↴](#thatproject-task)
 * [`thatproject task set-status`↴](#thatproject-task-set-status)
+* [`thatproject task read`↴](#thatproject-task-read)
 
 ## `thatproject`
 
@@ -104,6 +105,7 @@ Lists all tasks
 ###### **Subcommands:**
 
 * `set-status` — Sets the status of a given task
+* `read` — Reads the given task
 
 ###### **Arguments:**
 
@@ -123,6 +125,18 @@ Sets the status field in the task file.
 
   Possible values: `draft`, `ongoing`, `complete`
 
+
+
+
+## `thatproject task read`
+
+Output the contents of the file
+
+**Usage:** `thatproject task read [OPTIONS]`
+
+###### **Options:**
+
+* `--json`
 
 
 
