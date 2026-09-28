@@ -13,6 +13,7 @@ Use the following subcommand of `thatproject` to manage a thatproject project. A
 ###### **Subcommands:**
 
 * `set-status` — Sets the status of a given task
+* `read` — Reads the given task
 
 ###### **Arguments:**
 
@@ -32,6 +33,18 @@ Sets the status field in the task file.
 
   Possible values: `draft`, `ongoing`, `complete`
 
+
+
+
+## `task read`
+
+Output the contents of the file
+
+**Usage:** `task read [OPTIONS]`
+
+###### **Options:**
+
+* `--json`
 
 
 
