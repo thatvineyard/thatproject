@@ -25,6 +25,6 @@ jobs:
         run: |
           git add agents
           # only commit if changes in other files than index.json
-          git diff --quiet --cached -- agents --exclude=agents/index.json || git commit -m "docs: regenerate agent skills [gha]"
+          git diff --quiet --cached -- agents --exclude=agents/opencode/skills/index.json || git commit -m "agents: regenerate skills [gha]"
       - name: Push
         run: git push
