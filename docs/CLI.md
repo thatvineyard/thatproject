@@ -11,7 +11,7 @@ This document contains the help content for the `thatproject` command-line progr
 * [`thatproject tasks add`↴](#thatproject-tasks-add)
 * [`thatproject tasks list`↴](#thatproject-tasks-list)
 * [`thatproject task`↴](#thatproject-task)
-* [`thatproject task set-name`↴](#thatproject-task-set-name)
+* [`thatproject task set-title`↴](#thatproject-task-set-title)
 * [`thatproject task set-description`↴](#thatproject-task-set-description)
 * [`thatproject task set-category`↴](#thatproject-task-set-category)
 * [`thatproject task set-body`↴](#thatproject-task-set-body)
@@ -83,11 +83,11 @@ Add a source directory to the manifest so it can be included in source commands.
 
 Creates a task file in the task folder defined in the manifest.
 
-**Usage:** `thatproject tasks add [OPTIONS] <NAME>`
+**Usage:** `thatproject tasks add [OPTIONS] <TITLE>`
 
 ###### **Arguments:**
 
-* `<NAME>`
+* `<TITLE>`
 
 ###### **Options:**
 
@@ -108,11 +108,11 @@ Lists all tasks
 
 ## `thatproject task`
 
-**Usage:** `thatproject task <NAME> <COMMAND>`
+**Usage:** `thatproject task <KEY> <COMMAND>`
 
 ###### **Subcommands:**
 
-* `set-name` — Sets the name of a given task
+* `set-title` — Sets the title of a given task
 * `set-description` — Sets the description of a given task
 * `set-category` — Sets the category of a given task
 * `set-body` — Sets the body of a given task
@@ -121,19 +121,19 @@ Lists all tasks
 
 ###### **Arguments:**
 
-* `<NAME>`
+* `<KEY>`
 
 
 
-## `thatproject task set-name`
+## `thatproject task set-title`
 
-Sets the name in the task file header.
+Sets the title in the task file header.
 
-**Usage:** `thatproject task set-name <NAME>`
+**Usage:** `thatproject task set-title <TITLE>`
 
 ###### **Arguments:**
 
-* `<NAME>`
+* `<TITLE>`
 
 
 
