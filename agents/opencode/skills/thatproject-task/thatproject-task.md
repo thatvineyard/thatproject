@@ -12,6 +12,9 @@ Use the following subcommand of `thatproject` to manage a thatproject project. A
 
 ###### **Subcommands:**
 
+* `set-name` — Sets the name of a given task
+* `set-description` — Sets the description of a given task
+* `set-category` — Sets the category of a given task
 * `set-body` — Sets the body of a given task
 * `set-status` — Sets the status of a given task
 * `read` — Reads the given task
@@ -19,6 +22,42 @@ Use the following subcommand of `thatproject` to manage a thatproject project. A
 ###### **Arguments:**
 
 * `<NAME>`
+
+
+
+## `task set-name`
+
+Sets the name in the task file header.
+
+**Usage:** `task set-name <NAME>`
+
+###### **Arguments:**
+
+* `<NAME>`
+
+
+
+## `task set-description`
+
+Sets the description in the task file header.
+
+**Usage:** `task set-description <DESCRIPTION>`
+
+###### **Arguments:**
+
+* `<DESCRIPTION>`
+
+
+
+## `task set-category`
+
+Sets the category in the task file header.
+
+**Usage:** `task set-category <CATEGORY>`
+
+###### **Arguments:**
+
+* `<CATEGORY>`
 
 
 
