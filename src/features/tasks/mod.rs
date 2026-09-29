@@ -9,7 +9,7 @@ use crate::{
     app_context::AppContext,
     features::tasks::{
         self,
-        taskfile::{TaskFile, TaskStatus},
+        taskfile::{Category, TaskFile, TaskStatus},
     },
 };
 
@@ -22,6 +22,39 @@ pub fn create_task(
     let task_file = taskfile::TaskFile::create(context, name, category, description)?;
     tasks::store::store(context, &task_file)?;
     Ok(task_file)
+}
+
+pub fn set_name(
+    context: &AppContext,
+    name: String,
+    new_name: String,
+) -> Result<(), Box<dyn Error>> {
+    let mut task_file = tasks::store::load(context, name)?;
+    task_file.header.name = new_name;
+    tasks::store::store(context, &task_file)?;
+    Ok(())
+}
+
+pub fn set_category(
+    context: &AppContext,
+    name: String,
+    category: String,
+) -> Result<(), Box<dyn Error>> {
+    let mut task_file = tasks::store::load(context, name)?;
+    task_file.header.category = Category::new(category.as_str())?;
+    tasks::store::store(context, &task_file)?;
+    Ok(())
+}
+
+pub fn set_description(
+    context: &AppContext,
+    name: String,
+    description: String,
+) -> Result<(), Box<dyn Error>> {
+    let mut task_file = tasks::store::load(context, name)?;
+    task_file.header.description = description;
+    tasks::store::store(context, &task_file)?;
+    Ok(())
 }
 
 pub fn set_body(context: &AppContext, name: String, body: String) -> Result<(), Box<dyn Error>> {

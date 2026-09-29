@@ -1,12 +1,15 @@
 use std::error::Error;
 
-use crate::{app_context::AppContext, features::tasks::store};
+use crate::{
+    app_context::AppContext,
+    features::tasks::{store, taskfile::Category},
+};
 
-const DELIMITER: &str = ":";
+pub const DELIMITER: &str = ":";
 
 #[derive(Debug)]
 pub struct Key {
-    category: String,
+    category: Category,
     ordinal: u32,
 }
 
@@ -23,7 +26,7 @@ impl std::str::FromStr for Key {
         if let Some((cat, ord)) = key.split_once(DELIMITER) {
             if let Ok(ordinal) = ord.parse::<u32>() {
                 return Ok(Self {
-                    category: cat.to_string(),
+                    category: Category::new(cat)?,
                     ordinal,
                 });
             }
@@ -33,19 +36,19 @@ impl std::str::FromStr for Key {
 }
 
 impl Key {
-    pub fn next_key(context: &AppContext, category: String) -> Result<Self, Box<dyn Error>> {
+    pub fn next_key(context: &AppContext, category: &Category) -> Result<Self, Box<dyn Error>> {
         let tasks = store::list(context)?;
 
         let max_ordinal = tasks
             .iter()
-            .filter(|task| task.header.key.category == category)
+            .filter(|task| task.header.key.category == *category)
             .map(|task| task.header.key.ordinal)
             .max()
             .unwrap_or(0);
         let next_ordinal = max_ordinal + 1;
 
         Ok(Self {
-            category,
+            category: category.clone(),
             ordinal: next_ordinal,
         })
     }

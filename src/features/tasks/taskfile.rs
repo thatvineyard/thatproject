@@ -1,5 +1,5 @@
 use crate::app_context::AppContext;
-use crate::features::tasks::key::Key;
+use crate::features::tasks::key::{self, Key};
 use crate::tools::{self, frontmatter};
 use core::fmt;
 use serde;
@@ -9,8 +9,8 @@ use std::error::Error;
 
 const DEFAULT_CATEGORY: &str = "misc";
 
-fn default_category() -> String {
-    DEFAULT_CATEGORY.to_string()
+fn default_category() -> Category {
+    Category::new(DEFAULT_CATEGORY).expect("DEFAULT_CATEGORY constant must be a valid category")
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -46,9 +46,27 @@ pub struct TaskFileHeader {
     pub key: Key,
     pub name: String,
     #[serde(default = "default_category")]
-    pub category: String,
+    pub category: Category,
     pub description: String,
     pub status: TaskStatus,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone, PartialEq, Eq)]
+pub struct Category(String);
+
+impl std::fmt::Display for Category {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+impl Category {
+    pub fn new(s: &str) -> Result<Self, Box<dyn Error>> {
+        if s.contains(key::DELIMITER) {
+            return Err(format!("Category must not contain {}", key::DELIMITER).into());
+        }
+        Ok(Self(s.to_string()))
+    }
 }
 
 impl TaskFile {
@@ -58,11 +76,11 @@ impl TaskFile {
         category: Option<String>,
         description: String,
     ) -> Result<TaskFile, Box<dyn Error>> {
-        let category = category.unwrap_or(DEFAULT_CATEGORY.to_string());
+        let category: Category = Category::new(&category.unwrap_or(DEFAULT_CATEGORY.to_string()))?;
 
         let task_file = TaskFile {
             header: TaskFileHeader {
-                key: Key::next_key(context, category.clone())?,
+                key: Key::next_key(context, &category)?,
                 category,
                 name,
                 description,
