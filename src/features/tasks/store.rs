@@ -15,6 +15,33 @@ pub fn store(context: &AppContext, task_file: &TaskFile) -> Result<(), Box<dyn E
     Ok(())
 }
 
+pub fn update(
+    context: &AppContext,
+    name: String,
+    update_function: impl FnOnce(TaskFile) -> TaskFile,
+) -> Result<(), Box<dyn Error>> {
+    let task_file = load(context, name)?;
+    let original_file_name = file_path(context, &task_file.name())?;
+
+    let updated_task_file = update_function(task_file);
+
+    let updated_file_name = file_path(context, &updated_task_file.name())?;
+
+    let data = updated_task_file.to_data()?;
+    fs::write(updated_file_name.clone(), data)?;
+    if updated_file_name != original_file_name {
+        fs::remove_file(original_file_name)?;
+    }
+
+    Ok(())
+}
+
+// pub fn remove(context: &AppContext, task_file: &TaskFile) -> Result<(), Box<dyn Error>> {
+//     fs::remove_file(&file_path(context, &task_file.name())?)?;
+
+//     Ok(())
+// }
+
 pub fn load(context: &AppContext, name: String) -> Result<TaskFile, Box<dyn Error>> {
     let path = file_path(context, &name)?;
     let data = fs::read_to_string(path)?;

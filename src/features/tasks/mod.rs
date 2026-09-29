@@ -9,7 +9,7 @@ use crate::{
     app_context::AppContext,
     features::tasks::{
         self,
-        taskfile::{Category, TaskFile, TaskStatus},
+        taskfile::{Category, TaskFile, TaskFileHeader, TaskStatus},
     },
 };
 
@@ -29,10 +29,13 @@ pub fn set_name(
     name: String,
     new_name: String,
 ) -> Result<(), Box<dyn Error>> {
-    let mut task_file = tasks::store::load(context, name)?;
-    task_file.header.name = new_name;
-    tasks::store::store(context, &task_file)?;
-    Ok(())
+    tasks::store::update(context, name, |task: TaskFile| TaskFile {
+        header: TaskFileHeader {
+            name: new_name,
+            ..task.header
+        },
+        ..task
+    })
 }
 
 pub fn set_category(
@@ -40,10 +43,14 @@ pub fn set_category(
     name: String,
     category: String,
 ) -> Result<(), Box<dyn Error>> {
-    let mut task_file = tasks::store::load(context, name)?;
-    task_file.header.category = Category::new(category.as_str())?;
-    tasks::store::store(context, &task_file)?;
-    Ok(())
+    let category = Category::new(category.as_str())?;
+    tasks::store::update(context, name, |task: TaskFile| TaskFile {
+        header: TaskFileHeader {
+            category,
+            ..task.header
+        },
+        ..task
+    })
 }
 
 pub fn set_description(
@@ -51,17 +58,17 @@ pub fn set_description(
     name: String,
     description: String,
 ) -> Result<(), Box<dyn Error>> {
-    let mut task_file = tasks::store::load(context, name)?;
-    task_file.header.description = description;
-    tasks::store::store(context, &task_file)?;
-    Ok(())
+    tasks::store::update(context, name, |task: TaskFile| TaskFile {
+        header: TaskFileHeader {
+            description,
+            ..task.header
+        },
+        ..task
+    })
 }
 
 pub fn set_body(context: &AppContext, name: String, body: String) -> Result<(), Box<dyn Error>> {
-    let mut task_file = tasks::store::load(context, name)?;
-    task_file.body = body;
-    tasks::store::store(context, &task_file)?;
-    Ok(())
+    tasks::store::update(context, name, |task| TaskFile { body, ..task })
 }
 
 pub fn set_status(
@@ -69,10 +76,13 @@ pub fn set_status(
     name: String,
     status: TaskStatus,
 ) -> Result<(), Box<dyn Error>> {
-    let mut task_file = tasks::store::load(context, name)?;
-    task_file.header.status = status;
-    tasks::store::store(context, &task_file)?;
-    Ok(())
+    tasks::store::update(context, name, |task: TaskFile| TaskFile {
+        header: TaskFileHeader {
+            status,
+            ..task.header
+        },
+        ..task
+    })
 }
 
 pub fn list(context: &AppContext) -> Result<(), Box<dyn Error>> {
