@@ -8,6 +8,8 @@ use crate::{
 const FILE_EXT: &str = ".md";
 
 pub fn store(context: &AppContext, task_file: &TaskFile) -> Result<(), Box<dyn Error>> {
+    validate_no_file_exists(context, &task_file.name())?;
+
     let data = task_file.to_data()?;
     fs::create_dir_all(context.get_taskfile_dir()?)?;
     fs::write(&file_path(context, &task_file.name())?, data)?;
@@ -27,6 +29,8 @@ pub fn update(
 
     let updated_file_name = file_path(context, &updated_task_file.name())?;
 
+    validate_no_file_exists(context, &updated_file_name)?;
+
     let data = updated_task_file.to_data()?;
     fs::write(updated_file_name.clone(), data)?;
     if updated_file_name != original_file_name {
@@ -34,6 +38,18 @@ pub fn update(
     }
 
     Ok(())
+}
+
+fn validate_no_file_exists(context: &AppContext, name: &String) -> Result<(), Box<dyn Error>> {
+    if file_exists(context, name.clone())? {
+        return Err("File already exists".into());
+    }
+    Ok(())
+}
+
+fn file_exists(context: &AppContext, name: String) -> Result<bool, Box<dyn Error>> {
+    let path = file_path(context, &name)?;
+    Ok(fs::exists(path)?)
 }
 
 // pub fn remove(context: &AppContext, task_file: &TaskFile) -> Result<(), Box<dyn Error>> {
