@@ -1,54 +1,73 @@
 use std::{error::Error, fs};
 
-use crate::{
-    app_context::AppContext,
-    features::tasks::{slug::slugify, taskfile::TaskFile},
-};
+use crate::{app_context::AppContext, features::tasks::taskfile::TaskFile};
 
 const FILE_EXT: &str = ".md";
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FileIdentifier(String);
+
+impl FileIdentifier {
+    fn as_str(&self) -> &str {
+        &self.0
+    }
+}
+
+impl From<&TaskFile> for FileIdentifier {
+    fn from(task_file: &TaskFile) -> Self {
+        Self(task_file.name())
+    }
+}
+
+impl From<String> for FileIdentifier {
+    fn from(name: String) -> Self {
+        Self(name)
+    }
+}
+
 pub fn store(context: &AppContext, task_file: &TaskFile) -> Result<(), Box<dyn Error>> {
-    validate_no_file_exists(context, &task_file.name())?;
+    validate_no_file_exists(context, task_file.into())?;
 
     let data = task_file.to_data()?;
     fs::create_dir_all(context.get_taskfile_dir()?)?;
-    fs::write(&file_path(context, &task_file.name())?, data)?;
+    fs::write(&file_path(context, task_file.into())?, data)?;
 
     Ok(())
 }
 
 pub fn update(
     context: &AppContext,
-    name: String,
+    file: FileIdentifier,
     update_function: impl FnOnce(TaskFile) -> TaskFile,
 ) -> Result<(), Box<dyn Error>> {
-    let task_file = load(context, name)?;
-    let original_file_name = file_path(context, &task_file.name())?;
+    let task_file = load(context, file)?;
+    let original_file: FileIdentifier = (&task_file).into();
 
     let updated_task_file = update_function(task_file);
 
-    let updated_file_name = file_path(context, &updated_task_file.name())?;
-
-    validate_no_file_exists(context, &updated_file_name)?;
+    validate_no_file_exists(context, (&updated_task_file).into())?;
 
     let data = updated_task_file.to_data()?;
-    fs::write(updated_file_name.clone(), data)?;
-    if updated_file_name != original_file_name {
-        fs::remove_file(original_file_name)?;
+    fs::write(file_path(context, (&updated_task_file).into())?, data)?;
+    if original_file != (&updated_task_file).into() {
+        fs::remove_file(file_path(context, original_file)?)?;
     }
 
     Ok(())
 }
 
-fn validate_no_file_exists(context: &AppContext, name: &String) -> Result<(), Box<dyn Error>> {
-    if file_exists(context, name.clone())? {
+fn validate_no_file_exists(
+    context: &AppContext,
+    file: FileIdentifier,
+) -> Result<(), Box<dyn Error>> {
+    if file_exists(context, file)? {
         return Err("File already exists".into());
     }
     Ok(())
 }
 
-fn file_exists(context: &AppContext, name: String) -> Result<bool, Box<dyn Error>> {
-    let path = file_path(context, &name)?;
+fn file_exists(context: &AppContext, file: FileIdentifier) -> Result<bool, Box<dyn Error>> {
+    let path = file_path(context, file)?;
     Ok(fs::exists(path)?)
 }
 
@@ -58,8 +77,8 @@ fn file_exists(context: &AppContext, name: String) -> Result<bool, Box<dyn Error
 //     Ok(())
 // }
 
-pub fn load(context: &AppContext, name: String) -> Result<TaskFile, Box<dyn Error>> {
-    let path = file_path(context, &name)?;
+pub fn load(context: &AppContext, file: FileIdentifier) -> Result<TaskFile, Box<dyn Error>> {
+    let path = file_path(context, file)?;
     let data = fs::read_to_string(path)?;
     let result = TaskFile::from_data(data)?;
     Ok(result)
@@ -90,8 +109,7 @@ pub fn list(context: &AppContext) -> Result<Vec<TaskFile>, Box<dyn Error>> {
     Ok(tasks)
 }
 
-fn file_path(context: &AppContext, name: &String) -> Result<String, Box<dyn Error>> {
-    let slug = slugify(name);
+fn file_path(context: &AppContext, file: FileIdentifier) -> Result<String, Box<dyn Error>> {
     let dir = context.get_taskfile_dir()?;
-    Ok(format!("{}/{}{}", dir, slug, FILE_EXT))
+    Ok(format!("{}/{}{}", dir, file.as_str(), FILE_EXT))
 }

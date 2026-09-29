@@ -29,7 +29,7 @@ pub fn set_name(
     name: String,
     new_name: String,
 ) -> Result<(), Box<dyn Error>> {
-    tasks::store::update(context, name, |task: TaskFile| TaskFile {
+    tasks::store::update(context, name.into(), |task: TaskFile| TaskFile {
         header: TaskFileHeader {
             name: new_name,
             ..task.header
@@ -44,7 +44,7 @@ pub fn set_category(
     category: String,
 ) -> Result<(), Box<dyn Error>> {
     let category = Category::new(category.as_str())?;
-    tasks::store::update(context, name, |task: TaskFile| TaskFile {
+    tasks::store::update(context, name.into(), |task: TaskFile| TaskFile {
         header: TaskFileHeader {
             category,
             ..task.header
@@ -58,7 +58,7 @@ pub fn set_description(
     name: String,
     description: String,
 ) -> Result<(), Box<dyn Error>> {
-    tasks::store::update(context, name, |task: TaskFile| TaskFile {
+    tasks::store::update(context, name.into(), |task: TaskFile| TaskFile {
         header: TaskFileHeader {
             description,
             ..task.header
@@ -68,7 +68,7 @@ pub fn set_description(
 }
 
 pub fn set_body(context: &AppContext, name: String, body: String) -> Result<(), Box<dyn Error>> {
-    tasks::store::update(context, name, |task| TaskFile { body, ..task })
+    tasks::store::update(context, name.into(), |task| TaskFile { body, ..task })
 }
 
 pub fn set_status(
@@ -76,7 +76,7 @@ pub fn set_status(
     name: String,
     status: TaskStatus,
 ) -> Result<(), Box<dyn Error>> {
-    tasks::store::update(context, name, |task: TaskFile| TaskFile {
+    tasks::store::update(context, name.into(), |task: TaskFile| TaskFile {
         header: TaskFileHeader {
             status,
             ..task.header
@@ -101,5 +101,5 @@ pub fn list(context: &AppContext) -> Result<(), Box<dyn Error>> {
 }
 
 pub fn read(context: &AppContext, name: String) -> Result<TaskFile, Box<dyn Error>> {
-    Ok(store::load(context, name)?)
+    Ok(store::load(context, name.into())?)
 }

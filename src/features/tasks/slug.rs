@@ -1,4 +1,4 @@
-pub fn slugify(name: &str) -> String {
+pub fn _slugify(name: &str) -> String {
     let slug = name
         .chars()
         .flat_map(char::to_lowercase)
