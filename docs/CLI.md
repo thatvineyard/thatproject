@@ -11,6 +11,9 @@ This document contains the help content for the `thatproject` command-line progr
 * [`thatproject tasks add`↴](#thatproject-tasks-add)
 * [`thatproject tasks list`↴](#thatproject-tasks-list)
 * [`thatproject task`↴](#thatproject-task)
+* [`thatproject task set-name`↴](#thatproject-task-set-name)
+* [`thatproject task set-description`↴](#thatproject-task-set-description)
+* [`thatproject task set-category`↴](#thatproject-task-set-category)
 * [`thatproject task set-body`↴](#thatproject-task-set-body)
 * [`thatproject task set-status`↴](#thatproject-task-set-status)
 * [`thatproject task read`↴](#thatproject-task-read)
@@ -109,6 +112,9 @@ Lists all tasks
 
 ###### **Subcommands:**
 
+* `set-name` — Sets the name of a given task
+* `set-description` — Sets the description of a given task
+* `set-category` — Sets the category of a given task
 * `set-body` — Sets the body of a given task
 * `set-status` — Sets the status of a given task
 * `read` — Reads the given task
@@ -116,6 +122,42 @@ Lists all tasks
 ###### **Arguments:**
 
 * `<NAME>`
+
+
+
+## `thatproject task set-name`
+
+Sets the name in the task file header.
+
+**Usage:** `thatproject task set-name <NAME>`
+
+###### **Arguments:**
+
+* `<NAME>`
+
+
+
+## `thatproject task set-description`
+
+Sets the description in the task file header.
+
+**Usage:** `thatproject task set-description <DESCRIPTION>`
+
+###### **Arguments:**
+
+* `<DESCRIPTION>`
+
+
+
+## `thatproject task set-category`
+
+Sets the category in the task file header.
+
+**Usage:** `thatproject task set-category <CATEGORY>`
+
+###### **Arguments:**
+
+* `<CATEGORY>`
 
 
 
