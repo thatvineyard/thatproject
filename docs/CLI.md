@@ -80,11 +80,15 @@ Add a source directory to the manifest so it can be included in source commands.
 
 Creates a task file in the task folder defined in the manifest.
 
-**Usage:** `thatproject tasks add [OPTIONS] --name <NAME>`
+**Usage:** `thatproject tasks add [OPTIONS] <NAME>`
+
+###### **Arguments:**
+
+* `<NAME>`
 
 ###### **Options:**
 
-* `-n`, `--name <NAME>`
+* `--category <CATEGORY>`
 * `-d`, `--description <DESCRIPTION>`
 
   Default value: ``
