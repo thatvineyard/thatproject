@@ -8,11 +8,11 @@ Use the following subcommand of `thatproject` to manage a thatproject project. A
 
 ## `task`
 
-**Usage:** `task <NAME> <COMMAND>`
+**Usage:** `task <KEY> <COMMAND>`
 
 ###### **Subcommands:**
 
-* `set-name` — Sets the name of a given task
+* `set-title` — Sets the title of a given task
 * `set-description` — Sets the description of a given task
 * `set-category` — Sets the category of a given task
 * `set-body` — Sets the body of a given task
@@ -21,19 +21,19 @@ Use the following subcommand of `thatproject` to manage a thatproject project. A
 
 ###### **Arguments:**
 
-* `<NAME>`
+* `<KEY>`
 
 
 
-## `task set-name`
+## `task set-title`
 
-Sets the name in the task file header.
+Sets the title in the task file header.
 
-**Usage:** `task set-name <NAME>`
+**Usage:** `task set-title <TITLE>`
 
 ###### **Arguments:**
 
-* `<NAME>`
+* `<TITLE>`
 
 
 

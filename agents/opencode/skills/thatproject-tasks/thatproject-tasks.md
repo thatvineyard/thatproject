@@ -21,11 +21,11 @@ Use the following subcommand of `thatproject` to manage a thatproject project. A
 
 Creates a task file in the task folder defined in the manifest.
 
-**Usage:** `tasks add [OPTIONS] <NAME>`
+**Usage:** `tasks add [OPTIONS] <TITLE>`
 
 ###### **Arguments:**
 
-* `<NAME>`
+* `<TITLE>`
 
 ###### **Options:**
 
