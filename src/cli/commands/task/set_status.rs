@@ -19,8 +19,8 @@ impl From<TaskStatusArg> for TaskStatus {
     }
 }
 
-pub fn run(context: &AppContext, name: String, status: TaskStatusArg) {
-    if let Err(err) = crate::features::tasks::set_status(context, name, TaskStatus::from(status)) {
+pub fn run(context: &AppContext, key: String, status: TaskStatusArg) {
+    if let Err(err) = crate::features::tasks::set_status(context, key, TaskStatus::from(status)) {
         eprintln!("Error: {}", err);
         std::process::exit(1);
     }

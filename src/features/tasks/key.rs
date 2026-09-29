@@ -7,7 +7,7 @@ use crate::{
 
 pub const DELIMITER: &str = ":";
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Key {
     category: Category,
     ordinal: u32,

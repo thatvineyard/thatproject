@@ -1,5 +1,5 @@
-pub fn _slugify(name: &str) -> String {
-    let slug = name
+pub fn slugify(value: &str) -> String {
+    let slug = value
         .chars()
         .flat_map(char::to_lowercase)
         .fold(String::new(), |mut slug, ch| {

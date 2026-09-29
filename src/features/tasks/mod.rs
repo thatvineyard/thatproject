@@ -9,79 +9,90 @@ use crate::{
     app_context::AppContext,
     features::tasks::{
         self,
+        key::Key,
         taskfile::{Category, TaskFile, TaskFileHeader, TaskStatus},
     },
 };
 
 pub fn create_task(
     context: &AppContext,
-    name: String,
+    title: String,
     category: Option<String>,
     description: String,
 ) -> Result<TaskFile, Box<dyn Error>> {
-    let task_file = taskfile::TaskFile::create(context, name, category, description)?;
+    let task_file = taskfile::TaskFile::create(context, title, category, description)?;
     tasks::store::store(context, &task_file)?;
     Ok(task_file)
 }
 
-pub fn set_name(
-    context: &AppContext,
-    name: String,
-    new_name: String,
-) -> Result<(), Box<dyn Error>> {
-    tasks::store::update(context, name.into(), |task: TaskFile| TaskFile {
-        header: TaskFileHeader {
-            name: new_name,
-            ..task.header
-        },
-        ..task
+pub fn set_title(context: &AppContext, key: String, title: String) -> Result<(), Box<dyn Error>> {
+    let key: Key = key.parse()?;
+    tasks::store::update(context, key.into(), |task: TaskFile| {
+        Ok(TaskFile {
+            header: TaskFileHeader {
+                title,
+                ..task.header
+            },
+            ..task
+        })
     })
 }
 
 pub fn set_category(
     context: &AppContext,
-    name: String,
+    key: String,
     category: String,
 ) -> Result<(), Box<dyn Error>> {
+    let key: Key = key.parse()?;
     let category = Category::new(category.as_str())?;
-    tasks::store::update(context, name.into(), |task: TaskFile| TaskFile {
-        header: TaskFileHeader {
-            category,
-            ..task.header
-        },
-        ..task
+    tasks::store::update(context, key.into(), |task: TaskFile| {
+        Ok(TaskFile {
+            header: TaskFileHeader {
+                key: Key::next_key(context, &category)?,
+                category,
+                ..task.header
+            },
+            ..task
+        })
     })
 }
 
 pub fn set_description(
     context: &AppContext,
-    name: String,
+    key: String,
     description: String,
 ) -> Result<(), Box<dyn Error>> {
-    tasks::store::update(context, name.into(), |task: TaskFile| TaskFile {
-        header: TaskFileHeader {
-            description,
-            ..task.header
-        },
-        ..task
+    let key: Key = key.parse()?;
+    tasks::store::update(context, key.into(), |task: TaskFile| {
+        Ok(TaskFile {
+            header: TaskFileHeader {
+                description,
+                ..task.header
+            },
+            ..task
+        })
     })
 }
 
-pub fn set_body(context: &AppContext, name: String, body: String) -> Result<(), Box<dyn Error>> {
-    tasks::store::update(context, name.into(), |task| TaskFile { body, ..task })
+pub fn set_body(context: &AppContext, key: String, body: String) -> Result<(), Box<dyn Error>> {
+    let key: Key = key.parse()?;
+    tasks::store::update(context, key.into(), |task| Ok(TaskFile { body, ..task }))
 }
 
 pub fn set_status(
     context: &AppContext,
-    name: String,
+    key: String,
     status: TaskStatus,
 ) -> Result<(), Box<dyn Error>> {
-    tasks::store::update(context, name.into(), |task: TaskFile| TaskFile {
-        header: TaskFileHeader {
-            status,
-            ..task.header
-        },
-        ..task
+    let key: Key = key.parse()?;
+    tasks::store::update(context, key.into(), |task: TaskFile| {
+        Ok(TaskFile {
+            header: TaskFileHeader {
+                status,
+                ..task.header
+            },
+            ..task
+        })
     })
 }
 
@@ -100,6 +111,7 @@ pub fn list(context: &AppContext) -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-pub fn read(context: &AppContext, name: String) -> Result<TaskFile, Box<dyn Error>> {
-    Ok(store::load(context, name.into())?)
+pub fn read(context: &AppContext, key: String) -> Result<TaskFile, Box<dyn Error>> {
+    let key: Key = key.parse()?;
+    Ok(store::load(context, key.into())?)
 }

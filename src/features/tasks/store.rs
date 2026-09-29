@@ -1,6 +1,9 @@
 use std::{error::Error, fs};
 
-use crate::{app_context::AppContext, features::tasks::taskfile::TaskFile};
+use crate::{
+    app_context::AppContext,
+    features::tasks::{key::Key, slug, taskfile::TaskFile},
+};
 
 const FILE_EXT: &str = ".md";
 
@@ -15,13 +18,13 @@ impl FileIdentifier {
 
 impl From<&TaskFile> for FileIdentifier {
     fn from(task_file: &TaskFile) -> Self {
-        Self(task_file.name())
+        task_file.header.key.clone().into()
     }
 }
 
-impl From<String> for FileIdentifier {
-    fn from(name: String) -> Self {
-        Self(name)
+impl From<Key> for FileIdentifier {
+    fn from(key: Key) -> Self {
+        Self(slug::slugify(key.to_string().as_str()))
     }
 }
 
@@ -38,18 +41,28 @@ pub fn store(context: &AppContext, task_file: &TaskFile) -> Result<(), Box<dyn E
 pub fn update(
     context: &AppContext,
     file: FileIdentifier,
-    update_function: impl FnOnce(TaskFile) -> TaskFile,
+    update_function: impl FnOnce(TaskFile) -> Result<TaskFile, Box<dyn Error>>,
 ) -> Result<(), Box<dyn Error>> {
     let task_file = load(context, file)?;
     let original_file: FileIdentifier = (&task_file).into();
 
-    let updated_task_file = update_function(task_file);
+    let updated_task_file = update_function(task_file)?;
+    let update_file: FileIdentifier = (&updated_task_file).into();
 
-    validate_no_file_exists(context, (&updated_task_file).into())?;
+    let should_move_file = original_file != update_file.clone();
+    if should_move_file {
+        println!(
+            "Renaming file from {} to {}",
+            original_file.as_str(),
+            update_file.as_str()
+        );
+        validate_no_file_exists(context, update_file.clone())?;
+    }
 
     let data = updated_task_file.to_data()?;
-    fs::write(file_path(context, (&updated_task_file).into())?, data)?;
-    if original_file != (&updated_task_file).into() {
+    fs::write(file_path(context, update_file.clone())?, data)?;
+
+    if should_move_file {
         fs::remove_file(file_path(context, original_file)?)?;
     }
 
@@ -72,7 +85,7 @@ fn file_exists(context: &AppContext, file: FileIdentifier) -> Result<bool, Box<d
 }
 
 // pub fn remove(context: &AppContext, task_file: &TaskFile) -> Result<(), Box<dyn Error>> {
-//     fs::remove_file(&file_path(context, &task_file.name())?)?;
+//     fs::remove_file(&file_path(context, &task_file.title())?)?;
 
 //     Ok(())
 // }

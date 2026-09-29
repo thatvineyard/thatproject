@@ -44,7 +44,7 @@ pub struct TaskFile {
 pub struct TaskFileHeader {
     #[serde_as(as = "DisplayFromStr")]
     pub key: Key,
-    pub name: String,
+    pub title: String,
     #[serde(default = "default_category")]
     pub category: Category,
     pub description: String,
@@ -72,7 +72,7 @@ impl Category {
 impl TaskFile {
     pub fn create(
         context: &AppContext,
-        name: String,
+        title: String,
         category: Option<String>,
         description: String,
     ) -> Result<TaskFile, Box<dyn Error>> {
@@ -82,7 +82,7 @@ impl TaskFile {
             header: TaskFileHeader {
                 key: Key::next_key(context, &category)?,
                 category,
-                name,
+                title,
                 description,
                 status: TaskStatus::Draft,
             },
@@ -107,7 +107,7 @@ impl TaskFile {
     pub fn to_one_liner(&self) -> String {
         format!(
             "[{}] {} ({}): {}",
-            self.header.key, self.header.name, self.header.status, self.header.description
+            self.header.key, self.header.title, self.header.status, self.header.description
         )
     }
 
@@ -115,7 +115,7 @@ impl TaskFile {
         Ok(serde_json::to_string(self)?)
     }
 
-    pub fn name(&self) -> std::string::String {
-        self.header.name.clone()
+    pub fn title(&self) -> std::string::String {
+        self.header.title.clone()
     }
 }

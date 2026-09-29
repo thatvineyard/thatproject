@@ -2,19 +2,19 @@ mod read;
 mod set_body;
 mod set_category;
 mod set_description;
-mod set_name;
 mod set_status;
+mod set_title;
 
 use crate::{app_context::AppContext, cli::commands::task::set_status::TaskStatusArg};
 use clap::{Args, Subcommand};
 
 #[derive(Subcommand, Debug)]
 pub enum TaskActions {
-    /// Sets the name of a given task
-    #[command(long_about = "Sets the name in the task file header.")]
-    SetName {
+    /// Sets the title of a given task
+    #[command(long_about = "Sets the title in the task file header.")]
+    SetTitle {
         #[arg()]
-        name: String,
+        title: String,
     },
     /// Sets the description of a given task
     #[command(long_about = "Sets the description in the task file header.")]
@@ -51,9 +51,9 @@ pub enum TaskActions {
 
 #[derive(Args, Debug)]
 pub struct TaskCommand {
-    // Task name
-    #[arg(value_name = "NAME")]
-    name: String,
+    // Task key (abcd:###)
+    #[arg(value_name = "KEY")]
+    key: String,
     #[command(subcommand)]
     action: TaskActions,
 }
@@ -61,16 +61,14 @@ pub struct TaskCommand {
 impl TaskCommand {
     pub fn run(self, context: &AppContext) {
         match self.action {
-            TaskActions::SetName { name } => set_name::run(context, self.name, name),
+            TaskActions::SetTitle { title } => set_title::run(context, self.key, title),
             TaskActions::SetDescription { description } => {
-                set_description::run(context, self.name, description)
+                set_description::run(context, self.key, description)
             }
-            TaskActions::SetCategory { category } => {
-                set_category::run(context, self.name, category)
-            }
-            TaskActions::SetBody { body } => set_body::run(context, self.name, body),
-            TaskActions::SetStatus { status } => set_status::run(context, self.name, status),
-            TaskActions::Read { json } => read::run(context, self.name, json),
+            TaskActions::SetCategory { category } => set_category::run(context, self.key, category),
+            TaskActions::SetBody { body } => set_body::run(context, self.key, body),
+            TaskActions::SetStatus { status } => set_status::run(context, self.key, status),
+            TaskActions::Read { json } => read::run(context, self.key, json),
         }
     }
 }

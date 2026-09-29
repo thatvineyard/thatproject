@@ -2,8 +2,8 @@ use std::process::exit;
 
 use crate::{app_context::AppContext, features::tasks};
 
-pub fn run(context: &AppContext, name: String, json: bool) {
-    let task = tasks::read(context, name).unwrap_or_else(|error| {
+pub fn run(context: &AppContext, key: String, json: bool) {
+    let task = tasks::read(context, key).unwrap_or_else(|error| {
         eprintln!("Error when reading taskfile: {}", error);
         exit(1);
     });
