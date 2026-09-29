@@ -1,3 +1,4 @@
+mod key;
 mod slug;
 mod store;
 pub mod taskfile;
@@ -15,9 +16,10 @@ use crate::{
 pub fn create_task(
     context: &AppContext,
     name: String,
+    category: Option<String>,
     description: String,
 ) -> Result<TaskFile, Box<dyn Error>> {
-    let task_file = taskfile::TaskFile::create(name, description)?;
+    let task_file = taskfile::TaskFile::create(context, name, category, description)?;
     tasks::store::store(context, &task_file)?;
     Ok(task_file)
 }

@@ -1,8 +1,17 @@
+use crate::app_context::AppContext;
+use crate::features::tasks::key::Key;
 use crate::tools::{self, frontmatter};
 use core::fmt;
 use serde;
 use serde::{Deserialize, Serialize};
+use serde_with::{DisplayFromStr, serde_as};
 use std::error::Error;
+
+const DEFAULT_CATEGORY: &str = "misc";
+
+fn default_category() -> String {
+    DEFAULT_CATEGORY.to_string()
+}
 
 #[derive(Debug, Deserialize, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -30,17 +39,31 @@ pub struct TaskFile {
     pub body: String,
 }
 
+#[serde_as]
 #[derive(Debug, Deserialize, Serialize)]
 pub struct TaskFileHeader {
+    #[serde_as(as = "DisplayFromStr")]
+    pub key: Key,
     pub name: String,
+    #[serde(default = "default_category")]
+    pub category: String,
     pub description: String,
     pub status: TaskStatus,
 }
 
 impl TaskFile {
-    pub fn create(name: String, description: String) -> std::io::Result<TaskFile> {
+    pub fn create(
+        context: &AppContext,
+        name: String,
+        category: Option<String>,
+        description: String,
+    ) -> Result<TaskFile, Box<dyn Error>> {
+        let category = category.unwrap_or(DEFAULT_CATEGORY.to_string());
+
         let task_file = TaskFile {
             header: TaskFileHeader {
+                key: Key::next_key(context, category.clone())?,
+                category,
                 name,
                 description,
                 status: TaskStatus::Draft,
@@ -65,8 +88,8 @@ impl TaskFile {
 
     pub fn to_one_liner(&self) -> String {
         format!(
-            "{} [{}]: {}",
-            self.header.name, self.header.status, self.header.description
+            "[{}] {} ({}): {}",
+            self.header.key, self.header.name, self.header.status, self.header.description
         )
     }
 
