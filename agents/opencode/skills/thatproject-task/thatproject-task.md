@@ -18,6 +18,7 @@ Use the following subcommand of `thatproject` to manage a thatproject project. A
 * `set-body` — Sets the body of a given task
 * `set-status` — Sets the status of a given task
 * `read` — Reads the given task
+* `add-reference` — Adds a reference to a given task
 
 ###### **Arguments:**
 
@@ -97,6 +98,26 @@ Output the contents of the file
 ###### **Options:**
 
 * `--json`
+
+
+
+## `task add-reference`
+
+Adds a reference to the task file header.
+
+**Usage:** `task add-reference [OPTIONS] --type <TYPE> <REFERENCE>`
+
+###### **Arguments:**
+
+* `<REFERENCE>`
+
+###### **Options:**
+
+* `--type <TYPE>`
+
+  Possible values: `source-code`, `documentation`
+
+* `--note <NOTE>`
 
 
 

@@ -1,3 +1,4 @@
+mod add_reference;
 mod read;
 mod set_body;
 mod set_category;
@@ -5,6 +6,7 @@ mod set_description;
 mod set_status;
 mod set_title;
 
+use crate::cli::commands::task::add_reference::ReferenceTypeArg;
 use crate::{app_context::AppContext, cli::commands::task::set_status::TaskStatusArg};
 use clap::{Args, Subcommand};
 
@@ -47,6 +49,16 @@ pub enum TaskActions {
         #[arg(long)]
         json: bool,
     },
+    /// Adds a reference to a given task
+    #[command(long_about = "Adds a reference to the task file header.")]
+    AddReference {
+        #[arg()]
+        reference: String,
+        #[arg(long, ignore_case = true)]
+        r#type: ReferenceTypeArg,
+        #[arg(long)]
+        note: Option<String>,
+    },
 }
 
 #[derive(Args, Debug)]
@@ -69,6 +81,11 @@ impl TaskCommand {
             TaskActions::SetBody { body } => set_body::run(context, self.key, body),
             TaskActions::SetStatus { status } => set_status::run(context, self.key, status),
             TaskActions::Read { json } => read::run(context, self.key, json),
+            TaskActions::AddReference {
+                reference,
+                r#type,
+                note,
+            } => add_reference::run(context, self.key, reference, r#type, note),
         }
     }
 }

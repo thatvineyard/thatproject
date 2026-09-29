@@ -17,6 +17,7 @@ This document contains the help content for the `thatproject` command-line progr
 * [`thatproject task set-body`↴](#thatproject-task-set-body)
 * [`thatproject task set-status`↴](#thatproject-task-set-status)
 * [`thatproject task read`↴](#thatproject-task-read)
+* [`thatproject task add-reference`↴](#thatproject-task-add-reference)
 
 ## `thatproject`
 
@@ -118,6 +119,7 @@ Lists all tasks
 * `set-body` — Sets the body of a given task
 * `set-status` — Sets the status of a given task
 * `read` — Reads the given task
+* `add-reference` — Adds a reference to a given task
 
 ###### **Arguments:**
 
@@ -197,6 +199,26 @@ Output the contents of the file
 ###### **Options:**
 
 * `--json`
+
+
+
+## `thatproject task add-reference`
+
+Adds a reference to the task file header.
+
+**Usage:** `thatproject task add-reference [OPTIONS] --type <TYPE> <REFERENCE>`
+
+###### **Arguments:**
+
+* `<REFERENCE>`
+
+###### **Options:**
+
+* `--type <TYPE>`
+
+  Possible values: `source-code`, `documentation`
+
+* `--note <NOTE>`
 
 
 

@@ -12,6 +12,7 @@ use crate::{
         key::Key,
         taskfile::{Category, TaskFile, TaskFileHeader, TaskStatus},
     },
+    reference::{Reference, ReferenceType},
 };
 
 pub fn create_task(
@@ -89,6 +90,28 @@ pub fn set_status(
         Ok(TaskFile {
             header: TaskFileHeader {
                 status,
+                ..task.header
+            },
+            ..task
+        })
+    })
+}
+
+pub fn add_reference(
+    context: &AppContext,
+    key: String,
+    reference: String,
+    reference_type: ReferenceType,
+    note: Option<String>,
+) -> Result<(), Box<dyn Error>> {
+    let key: Key = key.parse()?;
+    let reference = Reference::new(reference, reference_type, note);
+    tasks::store::update(context, key.into(), |task: TaskFile| {
+        let mut references = task.header.references;
+        references.push(reference);
+        Ok(TaskFile {
+            header: TaskFileHeader {
+                references,
                 ..task.header
             },
             ..task

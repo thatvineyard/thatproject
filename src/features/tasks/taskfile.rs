@@ -1,5 +1,6 @@
 use crate::app_context::AppContext;
 use crate::features::tasks::key::{self, Key};
+use crate::reference::Reference;
 use crate::tools::{self, frontmatter};
 use core::fmt;
 use serde;
@@ -49,6 +50,8 @@ pub struct TaskFileHeader {
     pub category: Category,
     pub description: String,
     pub status: TaskStatus,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub references: Vec<Reference>,
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, PartialEq, Eq)]
@@ -85,6 +88,7 @@ impl TaskFile {
                 title,
                 description,
                 status: TaskStatus::Draft,
+                references: Vec::new(),
             },
             body: "".to_string(),
         };
