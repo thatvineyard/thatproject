@@ -12,7 +12,7 @@ Run commands from the project directory with Cargo:
 
 ```sh
 cargo run -- init --name my-project --description "My project"
-cargo run -- add-source --source ./src
+cargo run -- add-reference ./src --type source-code
 ```
 
 Available commands:
@@ -20,7 +20,7 @@ Available commands:
 | Commands | Description |
 | ------------ | -- |
 | `init` | create a manifest with a name and optional description. |
-| `add-source` | add an existing directory to the manifest. |
+| `add-reference` | add a directory, file, glob pattern or URL to the manifest. |
 
 ## OpenCode skills
 

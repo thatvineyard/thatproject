@@ -1,11 +1,14 @@
-mod add_source;
+mod add_reference;
 mod init;
+mod reference_type_arg;
 mod task;
 mod tasks;
 
 use crate::{
     app_context::AppContext,
-    cli::commands::{task::TaskCommand, tasks::TasksCommands},
+    cli::commands::{
+        reference_type_arg::ReferenceTypeArg, task::TaskCommand, tasks::TasksCommands,
+    },
 };
 use clap::Subcommand;
 
@@ -24,13 +27,17 @@ pub enum Commands {
         task_dir: String,
     },
 
-    /// Adds a source to the project
+    /// Adds a reference to the project
     #[command(
-        long_about = "Add a source directory to the manifest so it can be included in source commands."
+        long_about = "Add a reference (directory, file, glob pattern or URL) to the manifest. Plain paths must exist."
     )]
-    AddSource {
-        #[arg(short, long)]
-        source: String,
+    AddReference {
+        #[arg()]
+        reference: String,
+        #[arg(long, ignore_case = true)]
+        r#type: ReferenceTypeArg,
+        #[arg(long)]
+        note: Option<String>,
     },
 
     // Manage the collection of tasks
@@ -49,7 +56,11 @@ impl Commands {
                 description,
                 task_dir,
             } => init::run(context, name, description, task_dir),
-            Commands::AddSource { source } => add_source::run(context, source),
+            Commands::AddReference {
+                reference,
+                r#type,
+                note,
+            } => add_reference::run(context, reference, r#type, note),
             Commands::Tasks(command) => command.run(context),
             Commands::Task(command) => command.run(context),
         }

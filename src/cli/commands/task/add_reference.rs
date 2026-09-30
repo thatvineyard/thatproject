@@ -1,20 +1,6 @@
 use crate::app_context::AppContext;
+use crate::cli::commands::reference_type_arg::ReferenceTypeArg;
 use crate::reference::ReferenceType;
-
-#[derive(Clone, Debug, clap::ValueEnum)]
-pub enum ReferenceTypeArg {
-    SourceCode,
-    Documentation,
-}
-
-impl From<ReferenceTypeArg> for ReferenceType {
-    fn from(reference_type: ReferenceTypeArg) -> Self {
-        match reference_type {
-            ReferenceTypeArg::SourceCode => Self::SourceCode,
-            ReferenceTypeArg::Documentation => Self::Documentation,
-        }
-    }
-}
 
 pub fn run(
     context: &AppContext,

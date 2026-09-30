@@ -6,7 +6,7 @@ mod set_description;
 mod set_status;
 mod set_title;
 
-use crate::cli::commands::task::add_reference::ReferenceTypeArg;
+use crate::cli::commands::reference_type_arg::ReferenceTypeArg;
 use crate::{app_context::AppContext, cli::commands::task::set_status::TaskStatusArg};
 use clap::{Args, Subcommand};
 

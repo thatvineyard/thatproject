@@ -2,12 +2,14 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 
 use crate::app_context::AppContext;
+use crate::reference::Reference;
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct Manifest {
     pub name: String,
     pub description: String,
-    pub sources: Vec<String>,
+    #[serde(default)]
+    pub references: Vec<Reference>,
     pub task_dir: String,
 }
 
@@ -23,7 +25,7 @@ impl Manifest {
         let manifest = Manifest {
             name,
             description,
-            sources: Vec::new(),
+            references: Vec::new(),
             task_dir,
         };
         let path = crate::config::get_manifest_path();
@@ -33,14 +35,14 @@ impl Manifest {
         fs::write(&path, json)
     }
 
-    pub fn add_source(_context: &AppContext, source: String) -> std::io::Result<()> {
+    pub fn add_reference(_context: &AppContext, reference: Reference) -> std::io::Result<()> {
         let path = crate::config::get_manifest_path();
         let content = fs::read_to_string(&path)?;
         let mut manifest: Manifest = serde_json::from_str(&content)
             .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
 
-        if !manifest.sources.contains(&source) {
-            manifest.sources.push(source);
+        if !manifest.references.contains(&reference) {
+            manifest.references.push(reference);
         }
 
         let json = serde_json::to_string_pretty(&manifest)

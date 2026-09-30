@@ -17,8 +17,3 @@ cargo run -- <args>  # Run with CLI args, e.g., `cargo run -- greet --name test`
 - **Commands**: `src/commands/mod.rs` — subcommand enum dispatches to modules under `src/commands/`
 - **Binary name**: `thatproject` (from `Cargo.toml`)
 - **Opencode references**: `agents/opencode` - Used to provide ready-to-use configuration for any opencode agent wanting to use this binary.
-
-
-## Subagents
-
-- **tester**: Used to run rust tests. If no arguments are passed then just run all tests.

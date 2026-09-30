@@ -37,6 +37,28 @@ impl fmt::Display for Reference {
     }
 }
 
+/// Returns true if the value is an http(s) URL.
+pub fn is_url(value: &str) -> bool {
+    value.starts_with("http://") || value.starts_with("https://")
+}
+
+/// Returns true if the value contains glob metacharacters.
+pub fn is_glob(value: &str) -> bool {
+    value.contains(['*', '?', '['])
+}
+
+/// Plain paths must exist. URLs and glob patterns are not checked.
+pub fn validate_value(value: &str) -> Result<(), String> {
+    if is_url(value) || is_glob(value) {
+        return Ok(());
+    }
+    if std::path::Path::new(value).exists() {
+        Ok(())
+    } else {
+        Err(format!("Path does not exist: {}", value))
+    }
+}
+
 impl Reference {
     pub fn new(value: impl Into<String>, r#type: ReferenceType, note: Option<String>) -> Self {
         Self {
