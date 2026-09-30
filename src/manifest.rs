@@ -31,7 +31,7 @@ impl Manifest {
         let path = crate::config::get_manifest_path();
         let json = serde_json::to_string_pretty(&manifest)
             .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
-        fs::create_dir_all(crate::config::get_project_dir())?;
+        fs::create_dir_all(crate::config::get_thatproject_dir())?;
         fs::write(&path, json)
     }
 
@@ -51,6 +51,6 @@ impl Manifest {
     }
 
     pub fn get_taskfile_dir(&self) -> String {
-        format!("{}/{}", crate::config::get_project_dir(), self.task_dir)
+        format!("{}/{}", crate::config::get_thatproject_dir(), self.task_dir)
     }
 }

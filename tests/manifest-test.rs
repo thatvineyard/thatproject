@@ -12,12 +12,12 @@ where
     let _guard = TEST_LOCK.lock().unwrap();
     let temp_dir = TempDir::new().unwrap();
 
-    thatproject::config::set_project_dir(temp_dir.path().to_str().unwrap().to_string());
+    thatproject::config::set_context_dir(temp_dir.path().to_str().unwrap().to_string());
     thatproject::config::set_manifest_filename("manifest.json".to_string());
 
     test_fn();
 
-    thatproject::config::reset_project_dir();
+    thatproject::config::reset_context_dir();
     thatproject::config::reset_manifest_filename();
 }
 

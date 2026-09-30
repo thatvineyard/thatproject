@@ -10,6 +10,7 @@ use crate::app_context;
 #[derive(Parser, Debug)]
 #[command(name = "thatproject", version, about = "ThatProject")]
 struct Cli {
+    // Access the project in the given folder
     #[arg(short, long, global = true)]
     context_dir: Option<String>,
     #[arg(short, long, global = true)]
@@ -22,7 +23,7 @@ pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
     if let Some(dir) = cli.context_dir {
-        crate::config::set_project_dir(dir);
+        crate::config::set_context_dir(dir);
     }
 
     let context = app_context::load(cli.agent_mode)?;

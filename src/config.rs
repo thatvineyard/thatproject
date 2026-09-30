@@ -1,29 +1,31 @@
 use std::cell::RefCell;
 
+const PROJECT_DIR: &str = ".thatproject";
+
 // DEFAULTS
 
 const DEFAULT_MANIFEST_FILENAME: &str = "manifest.json";
-const DEFAULT_PROJECT_DIR: &str = ".thatproject";
+const DEFAULT_CONTEXT_DIR: &str = ".";
 
-// PROJECT DIR
+// CONTEXT DIR
 
 thread_local! {
-  static PROJECT_DIR: RefCell<String> = RefCell::new(DEFAULT_PROJECT_DIR.to_string());
+  static CONTEXT_DIR: RefCell<String> = RefCell::new(DEFAULT_CONTEXT_DIR.to_string());
 }
 
-pub fn set_project_dir(dir: String) {
-    PROJECT_DIR.with(|d| {
+pub fn set_context_dir(dir: String) {
+    CONTEXT_DIR.with(|d| {
         *d.borrow_mut() = dir;
     })
 }
 
-pub fn get_project_dir() -> String {
-    PROJECT_DIR.with(|d| d.borrow().clone())
+pub fn get_context_dir() -> String {
+    CONTEXT_DIR.with(|d| d.borrow().clone())
 }
 
-pub fn reset_project_dir() {
-    PROJECT_DIR.with(|f| {
-        *f.borrow_mut() = DEFAULT_PROJECT_DIR.to_string();
+pub fn reset_context_dir() {
+    CONTEXT_DIR.with(|f| {
+        *f.borrow_mut() = DEFAULT_CONTEXT_DIR.to_string();
     })
 }
 
@@ -49,8 +51,14 @@ pub fn reset_manifest_filename() {
     })
 }
 
+// THATPROJECT DIR
+
+pub fn get_thatproject_dir() -> String {
+    format!("{}/{}", get_context_dir(), PROJECT_DIR)
+}
+
 // MANIFEST PATH
 
 pub fn get_manifest_path() -> String {
-    format!("{}/{}", get_project_dir(), get_filename())
+    format!("{}/{}", get_thatproject_dir(), get_filename())
 }
