@@ -1,4 +1,5 @@
 mod add_reference;
+mod add_subproject;
 mod init;
 mod reference_type_arg;
 mod task;
@@ -40,6 +41,17 @@ pub enum Commands {
         note: Option<String>,
     },
 
+    /// Adds a subproject to the project
+    #[command(
+        long_about = "Add a subproject to the manifest. Path must be a directory within this project's directory"
+    )]
+    AddSubproject {
+        #[arg()]
+        path: String,
+        #[arg(long)]
+        note: Option<String>,
+    },
+
     // Manage the collection of tasks
     #[command(subcommand)]
     Tasks(TasksCommands),
@@ -61,6 +73,7 @@ impl Commands {
                 r#type,
                 note,
             } => add_reference::run(context, reference, r#type, note),
+            Commands::AddSubproject { path, note } => add_subproject::run(context, path, note),
             Commands::Tasks(command) => command.run(context),
             Commands::Task(command) => command.run(context),
         }

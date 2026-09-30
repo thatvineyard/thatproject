@@ -7,6 +7,7 @@ This document contains the help content for the `thatproject` command-line progr
 * [`thatproject`↴](#thatproject)
 * [`thatproject init`↴](#thatproject-init)
 * [`thatproject add-reference`↴](#thatproject-add-reference)
+* [`thatproject add-subproject`↴](#thatproject-add-subproject)
 * [`thatproject tasks`↴](#thatproject-tasks)
 * [`thatproject tasks add`↴](#thatproject-tasks-add)
 * [`thatproject tasks list`↴](#thatproject-tasks-list)
@@ -29,6 +30,7 @@ ThatProject
 
 * `init` — Initialize a ThatProject workspace
 * `add-reference` — Adds a reference to the project
+* `add-subproject` — Adds a subproject to the project
 * `tasks` — 
 * `task` — 
 
@@ -72,6 +74,22 @@ Add a reference (directory, file, glob pattern or URL) to the manifest. Plain pa
 * `--type <TYPE>`
 
   Possible values: `source-code`, `documentation`
+
+* `--note <NOTE>`
+
+
+
+## `thatproject add-subproject`
+
+Add a subproject to the manifest. Path must be a directory within this project's directory
+
+**Usage:** `thatproject add-subproject [OPTIONS] <PATH>`
+
+###### **Arguments:**
+
+* `<PATH>`
+
+###### **Options:**
 
 * `--note <NOTE>`
 
