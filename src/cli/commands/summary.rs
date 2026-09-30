@@ -31,12 +31,4 @@ pub fn run(context: &AppContext) {
             println!("{}", data)
         }
     }
-
-    // if let Err(err) = crate::features::initialization::create_manifest(name, description, task_dir)
-    // {
-    //     eprintln!("Error: {}", err);
-    //     std::process::exit(1);
-    // }
-
-    // println!("Project initialized")
 }
