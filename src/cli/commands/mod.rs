@@ -2,6 +2,7 @@ mod add_reference;
 mod add_subproject;
 mod init;
 mod reference_type_arg;
+mod summary;
 mod task;
 mod tasks;
 
@@ -27,6 +28,10 @@ pub enum Commands {
         #[arg(long, default_value = "tasks")]
         task_dir: String,
     },
+
+    /// Summmarize project
+    #[command(long_about = "List manifest details")]
+    Summary,
 
     /// Adds a reference to the project
     #[command(
@@ -68,6 +73,7 @@ impl Commands {
                 description,
                 task_dir,
             } => init::run(context, name, description, task_dir),
+            Commands::Summary => summary::run(context),
             Commands::AddReference {
                 reference,
                 r#type,

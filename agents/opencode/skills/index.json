@@ -2,35 +2,42 @@
   "skills": [
     {
       "name": "thatproject-init",
-      "version": "39bbe1d6022c1d62df2d93d56315bc44438f60ec",
+      "version": "e0b7acc6356a0067bce81a027c31760722cd8a1c",
       "files": [
         "thatproject-init.md"
       ]
     },
     {
+      "name": "thatproject-summary",
+      "version": "e0b7acc6356a0067bce81a027c31760722cd8a1c",
+      "files": [
+        "thatproject-summary.md"
+      ]
+    },
+    {
       "name": "thatproject-add-reference",
-      "version": "39bbe1d6022c1d62df2d93d56315bc44438f60ec",
+      "version": "e0b7acc6356a0067bce81a027c31760722cd8a1c",
       "files": [
         "thatproject-add-reference.md"
       ]
     },
     {
       "name": "thatproject-add-subproject",
-      "version": "39bbe1d6022c1d62df2d93d56315bc44438f60ec",
+      "version": "e0b7acc6356a0067bce81a027c31760722cd8a1c",
       "files": [
         "thatproject-add-subproject.md"
       ]
     },
     {
       "name": "thatproject-tasks",
-      "version": "39bbe1d6022c1d62df2d93d56315bc44438f60ec",
+      "version": "e0b7acc6356a0067bce81a027c31760722cd8a1c",
       "files": [
         "thatproject-tasks.md"
       ]
     },
     {
       "name": "thatproject-task",
-      "version": "39bbe1d6022c1d62df2d93d56315bc44438f60ec",
+      "version": "e0b7acc6356a0067bce81a027c31760722cd8a1c",
       "files": [
         "thatproject-task.md"
       ]

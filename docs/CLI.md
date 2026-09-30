@@ -6,6 +6,7 @@ This document contains the help content for the `thatproject` command-line progr
 
 * [`thatproject`↴](#thatproject)
 * [`thatproject init`↴](#thatproject-init)
+* [`thatproject summary`↴](#thatproject-summary)
 * [`thatproject add-reference`↴](#thatproject-add-reference)
 * [`thatproject add-subproject`↴](#thatproject-add-subproject)
 * [`thatproject tasks`↴](#thatproject-tasks)
@@ -29,6 +30,7 @@ ThatProject
 ###### **Subcommands:**
 
 * `init` — Initialize a ThatProject workspace
+* `summary` — Summmarize project
 * `add-reference` — Adds a reference to the project
 * `add-subproject` — Adds a subproject to the project
 * `tasks` — 
@@ -56,6 +58,14 @@ Creates the necessary files and directories to enable this directory as a thatpr
 * `--task-dir <TASK_DIR>`
 
   Default value: `tasks`
+
+
+
+## `thatproject summary`
+
+List manifest details
+
+**Usage:** `thatproject summary`
 
 
 

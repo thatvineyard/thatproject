@@ -24,7 +24,7 @@ impl AppContext {
 }
 
 pub struct ValidatedManifest {
-    manifest: Manifest,
+    pub manifest: Manifest,
 }
 
 pub fn load(agent_mode: bool) -> Result<AppContext, std::io::Error> {
