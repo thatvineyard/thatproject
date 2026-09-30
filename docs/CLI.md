@@ -6,7 +6,7 @@ This document contains the help content for the `thatproject` command-line progr
 
 * [`thatproject`↴](#thatproject)
 * [`thatproject init`↴](#thatproject-init)
-* [`thatproject add-source`↴](#thatproject-add-source)
+* [`thatproject add-reference`↴](#thatproject-add-reference)
 * [`thatproject tasks`↴](#thatproject-tasks)
 * [`thatproject tasks add`↴](#thatproject-tasks-add)
 * [`thatproject tasks list`↴](#thatproject-tasks-list)
@@ -28,7 +28,7 @@ ThatProject
 ###### **Subcommands:**
 
 * `init` — Initialize a ThatProject workspace
-* `add-source` — Adds a source to the project
+* `add-reference` — Adds a reference to the project
 * `tasks` — 
 * `task` — 
 
@@ -57,15 +57,23 @@ Creates the necessary files and directories to enable this directory as a thatpr
 
 
 
-## `thatproject add-source`
+## `thatproject add-reference`
 
-Add a source directory to the manifest so it can be included in source commands.
+Add a reference (directory, file, glob pattern or URL) to the manifest. Plain paths must exist.
 
-**Usage:** `thatproject add-source --source <SOURCE>`
+**Usage:** `thatproject add-reference [OPTIONS] --type <TYPE> <REFERENCE>`
+
+###### **Arguments:**
+
+* `<REFERENCE>`
 
 ###### **Options:**
 
-* `-s`, `--source <SOURCE>`
+* `--type <TYPE>`
+
+  Possible values: `source-code`, `documentation`
+
+* `--note <NOTE>`
 
 
 
