@@ -100,7 +100,13 @@ pub fn load(context: &AppContext, file: FileIdentifier) -> Result<TaskFile, Box<
 pub fn list(context: &AppContext) -> Result<Vec<TaskFile>, Box<dyn Error>> {
     let dir = context.get_taskfile_dir()?;
 
-    let tasks = fs::read_dir(dir)?
+    let entries = match fs::read_dir(dir) {
+        Ok(entries) => entries,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => return Ok(Vec::new()),
+        Err(e) => return Err(e.into()),
+    };
+
+    let tasks = entries
         .map(|entry| -> Result<Option<TaskFile>, Box<dyn Error>> {
             let path = entry?.path();
 
