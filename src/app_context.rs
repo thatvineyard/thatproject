@@ -1,4 +1,4 @@
-use crate::manifest::Manifest;
+use crate::features::manifest::manifest::Manifest;
 
 pub enum ProjectState {
     Valid(ValidatedManifest),

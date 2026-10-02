@@ -1,5 +1,6 @@
 use crate::app_context::AppContext;
 use crate::cli::commands::reference_type_arg::ReferenceTypeArg;
+use crate::features::manifest::manifest::Manifest;
 use crate::reference::{Reference, ReferenceType, validate_value};
 
 pub fn run(
@@ -15,7 +16,7 @@ pub fn run(
 
     let reference = Reference::new(value.clone(), ReferenceType::from(reference_type), note);
 
-    if let Err(err) = crate::manifest::Manifest::add_reference(context, reference) {
+    if let Err(err) = Manifest::add_reference(context, reference) {
         eprintln!("Error: {}", err);
         std::process::exit(1);
     }
