@@ -7,8 +7,12 @@ pub fn run(context: &AppContext, name: String, description: String, task_dir: St
         exit(0);
     }
 
-    if let Err(err) = crate::features::initialization::create_manifest(name, description, task_dir)
-    {
+    if let Err(err) = crate::features::initialization::create_manifest(
+        &context.get_thatproject_dir(),
+        name,
+        description,
+        task_dir,
+    ) {
         eprintln!("Error: {}", err);
         std::process::exit(1);
     }

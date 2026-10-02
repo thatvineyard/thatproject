@@ -10,25 +10,10 @@ pub fn run(context: &AppContext) {
         ProjectState::Valid(manifest) => {
             let manifest = &manifest.manifest;
 
-            let data = if context.agent_mode {
-                match serde_json::to_string(manifest) {
-                    Ok(data) => data,
-                    Err(err) => {
-                        eprintln!("Error: {}", err);
-                        exit(1);
-                    }
-                }
-            } else {
-                match serde_yaml::to_string(manifest) {
-                    Ok(data) => data,
-                    Err(err) => {
-                        eprintln!("Error: {}", err);
-                        exit(1);
-                    }
-                }
-            };
-
-            println!("{}", data)
+            match manifest.to_string(context.agent_mode) {
+                Err(error) => eprintln!("Error: {}", error),
+                Ok(data) => println!("{}", data),
+            }
         }
     }
 }

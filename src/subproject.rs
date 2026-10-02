@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use std::{error::Error, fmt, path::Path};
 
-use crate::config;
+use crate::app_context::AppContext;
 
 /// A link to another thatproject folder
 #[derive(Debug, Deserialize, Serialize, Clone, PartialEq, Eq)]
@@ -18,7 +18,7 @@ impl fmt::Display for Subproject {
 }
 
 /// Path must exist, be a directory, exist within this project's folder and be a valid thatproject
-pub fn validate_value(value: &str) -> Result<(), Box<dyn Error>> {
+pub fn validate_value(context: &AppContext, value: &str) -> Result<(), Box<dyn Error>> {
     let path = Path::new(value);
 
     if !path.exists() {
@@ -30,7 +30,7 @@ pub fn validate_value(value: &str) -> Result<(), Box<dyn Error>> {
     }
 
     let path = path.canonicalize()?;
-    let context_dir = Path::new(config::get_context_dir().as_str()).canonicalize()?;
+    let context_dir = Path::new(&context.context_dir).canonicalize()?;
 
     if path == context_dir {
         return Err("Path cannot be same as this project".into());

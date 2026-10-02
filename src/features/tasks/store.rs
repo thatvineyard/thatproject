@@ -1,18 +1,18 @@
-use std::{error::Error, fs};
+use std::{error::Error, fs, path::PathBuf};
 
 use crate::{
     app_context::AppContext,
     features::tasks::{key::Key, slug, taskfile::TaskFile},
 };
 
-const FILE_EXT: &str = ".md";
+const FILE_EXT: &str = "md";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FileIdentifier(String);
 
 impl FileIdentifier {
-    fn as_str(&self) -> &str {
-        &self.0
+    fn as_filename(&self) -> PathBuf {
+        PathBuf::from(&self.0).with_extension(FILE_EXT)
     }
 }
 
@@ -53,8 +53,8 @@ pub fn update(
     if should_move_file {
         println!(
             "Renaming file from {} to {}",
-            original_file.as_str(),
-            update_file.as_str()
+            original_file.as_filename().display(),
+            update_file.as_filename().display()
         );
         validate_no_file_exists(context, update_file.clone())?;
     }
@@ -83,12 +83,6 @@ fn file_exists(context: &AppContext, file: FileIdentifier) -> Result<bool, Box<d
     let path = file_path(context, file)?;
     Ok(fs::exists(path)?)
 }
-
-// pub fn remove(context: &AppContext, task_file: &TaskFile) -> Result<(), Box<dyn Error>> {
-//     fs::remove_file(&file_path(context, &task_file.title())?)?;
-
-//     Ok(())
-// }
 
 pub fn load(context: &AppContext, file: FileIdentifier) -> Result<TaskFile, Box<dyn Error>> {
     let path = file_path(context, file)?;
@@ -128,7 +122,7 @@ pub fn list(context: &AppContext) -> Result<Vec<TaskFile>, Box<dyn Error>> {
     Ok(tasks)
 }
 
-fn file_path(context: &AppContext, file: FileIdentifier) -> Result<String, Box<dyn Error>> {
+fn file_path(context: &AppContext, file: FileIdentifier) -> Result<PathBuf, Box<dyn Error>> {
     let dir = context.get_taskfile_dir()?;
-    Ok(format!("{}/{}{}", dir, file.as_str(), FILE_EXT))
+    Ok(dir.join(file.as_filename()))
 }

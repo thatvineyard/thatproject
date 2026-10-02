@@ -1,75 +1,91 @@
-use serde::{Deserialize, Serialize};
 use std::fs;
+use std::io::ErrorKind;
+use std::path::{Path, PathBuf};
 
-use crate::app_context::AppContext;
+use crate::features::manifest::manifest_error::ManifestError;
+use crate::features::manifest::manifest_file::ManifestFile;
 use crate::reference::Reference;
 use crate::subproject::Subproject;
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug)]
 pub struct Manifest {
-    pub name: String,
-    pub description: String,
-    #[serde(default)]
-    pub subprojects: Vec<Subproject>,
-    #[serde(default)]
-    pub references: Vec<Reference>,
-    pub task_dir: String,
+    pub thatproject_dir: PathBuf,
+    file: ManifestFile,
 }
 
 impl Manifest {
-    pub fn load() -> std::io::Result<Self> {
-        let path = crate::config::get_manifest_path();
-        let content = fs::read_to_string(&path)?;
-        serde_json::from_str(&content)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))
-    }
-
-    pub fn create(name: String, description: String, task_dir: String) -> std::io::Result<()> {
-        let manifest = Manifest {
+    pub fn create(
+        thatproject_dir: &Path,
+        name: String,
+        description: String,
+        task_dir: String,
+    ) -> Result<Self, ManifestError> {
+        let manifest_file = ManifestFile {
             name,
             description,
             subprojects: Vec::new(),
             references: Vec::new(),
             task_dir,
         };
-        let path = crate::config::get_manifest_path();
-        let json = serde_json::to_string_pretty(&manifest)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
-        fs::create_dir_all(crate::config::get_thatproject_dir())?;
-        fs::write(&path, json)
+
+        let manifest = Manifest {
+            thatproject_dir: thatproject_dir.to_path_buf(),
+            file: manifest_file,
+        };
+
+        Ok(manifest)
     }
 
-    pub fn add_reference(_context: &AppContext, reference: Reference) -> std::io::Result<()> {
-        let path = crate::config::get_manifest_path();
-        let content = fs::read_to_string(&path)?;
-        let mut manifest: Manifest = serde_json::from_str(&content)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
+    pub fn load(thatproject_dir: &Path) -> Result<Manifest, ManifestError> {
+        let manifest_filepath = ManifestFile::path_in(thatproject_dir);
+        let content = fs::read_to_string(&manifest_filepath).map_err(|e| match e.kind() {
+            ErrorKind::NotFound => ManifestError::NotFound(manifest_filepath.clone()),
+            _ => ManifestError::Io(e),
+        })?;
+        let manifest_file: ManifestFile = content.parse()?;
 
-        if !manifest.references.contains(&reference) {
-            manifest.references.push(reference);
+        let manifest = Manifest {
+            thatproject_dir: thatproject_dir.to_path_buf(),
+            file: manifest_file,
+        };
+
+        Ok(manifest)
+    }
+
+    pub fn store(&self) -> Result<(), ManifestError> {
+        let manifest_filepath = ManifestFile::path_in(&self.thatproject_dir);
+        fs::create_dir_all(&self.thatproject_dir)?;
+        fs::write(manifest_filepath, self.file.to_string()?)?;
+
+        Ok(())
+    }
+
+    pub fn add_reference(&mut self, reference: Reference) -> Result<(), ManifestError> {
+        if !self.file.references.contains(&reference) {
+            self.file.references.push(reference);
         }
 
-        let json = serde_json::to_string_pretty(&manifest)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
-        fs::write(&path, json)
+        Ok(())
     }
 
-    pub fn add_subproject(_context: &AppContext, subproject: Subproject) -> std::io::Result<()> {
-        let path = crate::config::get_manifest_path();
-        let content = fs::read_to_string(&path)?;
-        let mut manifest: Manifest = serde_json::from_str(&content)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
-
-        if !manifest.subprojects.contains(&subproject) {
-            manifest.subprojects.push(subproject);
+    pub fn add_subproject(&mut self, subproject: Subproject) -> Result<(), ManifestError> {
+        if !self.file.subprojects.contains(&subproject) {
+            self.file.subprojects.push(subproject);
         }
 
-        let json = serde_json::to_string_pretty(&manifest)
-            .map_err(|e| std::io::Error::new(std::io::ErrorKind::InvalidData, e))?;
-        fs::write(&path, json)
+        Ok(())
     }
 
-    pub fn get_taskfile_dir(&self) -> String {
-        format!("{}/{}", crate::config::get_thatproject_dir(), self.task_dir)
+    pub fn get_taskfile_dir(&self) -> PathBuf {
+        self.thatproject_dir.join(self.file.task_dir.clone())
+    }
+
+    pub fn to_string(&self, agent_mode: bool) -> Result<String, ManifestError> {
+        let data = match agent_mode {
+            true => serde_json::to_string(&self.file)?,
+            false => serde_yaml::to_string(&self.file)?,
+        };
+
+        Ok(data)
     }
 }

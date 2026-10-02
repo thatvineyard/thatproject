@@ -1,25 +1,25 @@
-use std::fs;
-use std::sync::Mutex;
-use tempfile::TempDir;
-use thatproject::manifest::Manifest;
+// use std::fs;
+// use std::sync::Mutex;
+// use tempfile::TempDir;
+// use thatproject::manifest::Manifest;
 
-static TEST_LOCK: Mutex<()> = Mutex::new(());
+// static TEST_LOCK: Mutex<()> = Mutex::new(());
 
-fn with_temp_manifest<F>(test_fn: F)
-where
-    F: FnOnce(),
-{
-    let _guard = TEST_LOCK.lock().unwrap();
-    let temp_dir = TempDir::new().unwrap();
+// fn with_temp_manifest<F>(test_fn: F)
+// where
+//     F: FnOnce(),
+// {
+//     let _guard = TEST_LOCK.lock().unwrap();
+//     let temp_dir = TempDir::new().unwrap();
 
-    thatproject::config::set_context_dir(temp_dir.path().to_str().unwrap().to_string());
-    thatproject::config::set_manifest_filename("manifest.json".to_string());
+//     thatproject::config::set_context_dir(temp_dir.path().to_str().unwrap().to_string());
+//     thatproject::config::set_manifest_filename("manifest.json".to_string());
 
-    test_fn();
+//     test_fn();
 
-    thatproject::config::reset_context_dir();
-    thatproject::config::reset_manifest_filename();
-}
+//     thatproject::config::reset_context_dir();
+//     thatproject::config::reset_manifest_filename();
+// }
 
 // #[test]
 // fn test_create_manifest() {

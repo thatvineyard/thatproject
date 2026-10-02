@@ -1,5 +1,7 @@
 mod commands;
 
+use std::path::PathBuf;
+
 use clap::Command;
 use clap::CommandFactory;
 use clap::Parser;
@@ -12,7 +14,7 @@ use crate::app_context;
 struct Cli {
     // Access the project in the given folder
     #[arg(short, long, global = true)]
-    context_dir: Option<String>,
+    context_dir: Option<PathBuf>,
     #[arg(short, long, global = true)]
     agent_mode: bool,
     #[command(subcommand)]
@@ -22,13 +24,9 @@ struct Cli {
 pub fn run() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
-    if let Some(dir) = cli.context_dir {
-        crate::config::set_context_dir(dir);
-    }
+    let mut context = app_context::load(cli.context_dir, cli.agent_mode)?;
 
-    let context = app_context::load(cli.agent_mode)?;
-
-    cli.commands.run(&context);
+    cli.commands.run(&mut context);
 
     Ok(())
 }

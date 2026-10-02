@@ -66,7 +66,7 @@ pub enum Commands {
 }
 
 impl Commands {
-    pub fn run(self, context: &AppContext) {
+    pub fn run(self, context: &mut AppContext) {
         match self {
             Commands::Init {
                 name,
