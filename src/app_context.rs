@@ -2,11 +2,14 @@ use std::{error::Error, path::PathBuf};
 
 use crate::{
     config,
-    features::manifest::{manifest::Manifest, manifest_error::ManifestError},
+    features::{
+        manifest::{manifest::Manifest, manifest_error::ManifestError},
+        project::Project,
+    },
 };
 
 pub enum ProjectState {
-    Valid(ValidatedManifest),
+    Valid(Project),
     Unset,
 }
 
@@ -17,24 +20,24 @@ pub struct AppContext {
 }
 
 impl AppContext {
-    pub fn require_manifest(&self) -> Result<&Manifest, Box<dyn Error>> {
+    pub fn require_project(&self) -> Result<&Project, Box<dyn Error>> {
         let ProjectState::Valid(validated) = &self.project else {
-            return Err("project manifest is not initialized".into());
+            return Err("project is not initialized".into());
         };
 
-        Ok(&validated.manifest)
+        Ok(&validated)
     }
 
-    pub fn require_manifest_mut(&mut self) -> Result<&mut Manifest, Box<dyn Error>> {
+    pub fn require_project_mut(&mut self) -> Result<&mut Project, Box<dyn Error>> {
         let ProjectState::Valid(validated) = &mut self.project else {
             return Err("project manifest is not initialized".into());
         };
 
-        Ok(&mut validated.manifest)
+        Ok(validated)
     }
 
     pub fn get_taskfile_dir(&self) -> Result<PathBuf, Box<dyn Error>> {
-        Ok(self.require_manifest()?.get_taskfile_dir())
+        Ok(self.require_project()?.manifest.get_taskfile_dir())
     }
 
     pub fn get_thatproject_dir(&self) -> PathBuf {
@@ -42,15 +45,11 @@ impl AppContext {
     }
 }
 
-pub struct ValidatedManifest {
-    pub manifest: Manifest,
-}
-
 pub fn load(context_dir: Option<PathBuf>, agent_mode: bool) -> Result<AppContext, Box<dyn Error>> {
     let context_dir = context_dir.unwrap_or_else(|| PathBuf::from(config::DEFAULT_CONTEXT_DIR));
 
     let project = match Manifest::load(&context_dir.join(config::PROJECT_DIR)) {
-        Ok(manifest) => ProjectState::Valid(ValidatedManifest { manifest }),
+        Ok(manifest) => ProjectState::Valid(Project::resolve(manifest)?),
         Err(error) => match error {
             ManifestError::NotFound(_) => ProjectState::Unset,
             _ => return Err(error.into()),

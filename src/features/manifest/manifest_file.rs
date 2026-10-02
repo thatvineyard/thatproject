@@ -3,7 +3,7 @@ use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
 use crate::features::manifest::manifest_error::ManifestError;
-use crate::features::subproject::subproject::Subproject;
+use crate::features::subproject::subproject::SubprojectReference;
 use crate::reference::Reference;
 
 const MANIFEST_FILE_NAME: &str = "manifest.json";
@@ -13,7 +13,7 @@ pub struct ManifestFile {
     pub name: String,
     pub description: String,
     #[serde(default)]
-    pub subprojects: Vec<Subproject>,
+    pub subprojects: Vec<SubprojectReference>,
     #[serde(default)]
     pub references: Vec<Reference>,
     pub task_dir: String,

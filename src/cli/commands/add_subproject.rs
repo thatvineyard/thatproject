@@ -1,6 +1,6 @@
 use crate::{
     app_context::AppContext,
-    features::subproject::subproject::{Subproject, validate_value},
+    features::subproject::subproject::{SubprojectReference, validate_value},
 };
 
 pub fn run(context: &mut AppContext, path: String, alias: Option<String>, note: Option<String>) {
@@ -9,21 +9,22 @@ pub fn run(context: &mut AppContext, path: String, alias: Option<String>, note: 
         std::process::exit(1);
     }
 
-    let manifest = match context.require_manifest_mut() {
-        Ok(manifest) => manifest,
+    let project = match context.require_project_mut() {
+        Ok(project) => project,
         Err(error) => {
             eprintln!("Error: {}", error);
             std::process::exit(1);
         }
     };
 
-    let subproject = Subproject::new(path.clone(), alias, note);
+    let subproject = SubprojectReference::new(path.clone(), alias, note);
 
-    if let Err(err) = manifest.add_subproject(subproject) {
+    if let Err(err) = project.manifest.add_subproject(subproject) {
         eprintln!("Error: {}", err);
         std::process::exit(1);
     }
-    match manifest.store() {
+
+    match project.manifest.store() {
         Ok(_) => println!("Subproject added: {}", path),
         Err(error) => {
             eprintln!("Error: {}", error);

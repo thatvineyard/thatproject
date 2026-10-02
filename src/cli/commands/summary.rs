@@ -1,19 +1,18 @@
-use crate::app_context::{AppContext, ProjectState};
 use std::process::exit;
 
-pub fn run(context: &AppContext) {
-    match &context.project {
-        ProjectState::Unset => {
-            println!("Project is not initialized");
-            exit(0);
-        }
-        ProjectState::Valid(manifest) => {
-            let manifest = &manifest.manifest;
+use crate::app_context::AppContext;
 
-            match manifest.to_string(context.agent_mode) {
-                Err(error) => eprintln!("Error: {}", error),
-                Ok(data) => println!("{}", data),
-            }
+pub fn run(context: &AppContext) {
+    let project = match context.require_project() {
+        Ok(project) => project,
+        Err(error) => {
+            eprintln!("Error: {}", error);
+            exit(1);
         }
-    }
+    };
+
+    match project.to_summary(context) {
+        Err(error) => eprintln!("Error: {}", error),
+        Ok(output) => println!("{}", output),
+    };
 }

@@ -13,8 +13,8 @@ pub fn run(
         std::process::exit(1);
     }
 
-    let manifest = match context.require_manifest_mut() {
-        Ok(manifest) => manifest,
+    let project = match context.require_project_mut() {
+        Ok(project) => project,
         Err(error) => {
             eprintln!("Error: {}", error);
             std::process::exit(1);
@@ -23,10 +23,16 @@ pub fn run(
 
     let reference = Reference::new(value.clone(), ReferenceType::from(reference_type), note);
 
-    if let Err(err) = manifest.add_reference(reference) {
+    if let Err(err) = project.manifest.add_reference(reference) {
         eprintln!("Error: {}", err);
         std::process::exit(1);
     }
 
-    println!("Reference added: {}", value);
+    match project.manifest.store() {
+        Ok(_) => println!("Reference added: {}", value),
+        Err(error) => {
+            eprintln!("Error: {}", error);
+            std::process::exit(1);
+        }
+    }
 }

@@ -1,10 +1,13 @@
+use std::error::Error;
 use std::fs;
 use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 
+use crate::config;
 use crate::features::manifest::manifest_error::ManifestError;
 use crate::features::manifest::manifest_file::ManifestFile;
-use crate::features::subproject::subproject::Subproject;
+use crate::features::project::Project;
+use crate::features::subproject::subproject::SubprojectReference;
 use crate::reference::Reference;
 
 #[derive(Debug)]
@@ -68,7 +71,7 @@ impl Manifest {
         Ok(())
     }
 
-    pub fn add_subproject(&mut self, subproject: Subproject) -> Result<(), ManifestError> {
+    pub fn add_subproject(&mut self, subproject: SubprojectReference) -> Result<(), ManifestError> {
         if !self.file.subprojects.contains(&subproject) {
             self.file.subprojects.push(subproject);
         }
@@ -87,5 +90,37 @@ impl Manifest {
         };
 
         Ok(data)
+    }
+
+    pub fn name(&self) -> &str {
+        &self.file.name
+    }
+    pub fn description(&self) -> &str {
+        &self.file.description
+    }
+    pub fn references(&self) -> &Vec<Reference> {
+        &self.file.references
+    }
+    pub fn resolve_subprojects(
+        &self,
+    ) -> Result<Vec<(&SubprojectReference, Project)>, Box<dyn Error>> {
+        let subproject_refs = &self.file.subprojects;
+        let parent_dir = self
+            .thatproject_dir
+            .parent()
+            .ok_or("Unexpected directory structure")?;
+
+        subproject_refs
+            .iter()
+            .map(|subproject_ref| {
+                let manifest = Manifest::load(
+                    &parent_dir
+                        .join(&subproject_ref.path)
+                        .join(config::PROJECT_DIR),
+                )?;
+                let project = Project::resolve(manifest)?;
+                Ok((subproject_ref, project))
+            })
+            .collect()
     }
 }
