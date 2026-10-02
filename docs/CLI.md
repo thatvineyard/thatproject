@@ -101,6 +101,7 @@ Add a subproject to the manifest. Path must be a directory within this project's
 
 ###### **Options:**
 
+* `--alias <ALIAS>`
 * `--note <NOTE>`
 
 
