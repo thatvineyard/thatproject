@@ -1,5 +1,8 @@
 use serde::{Deserialize, Serialize};
-use std::{fmt, io, path::Path};
+use std::{
+    fmt, io,
+    path::{Path, PathBuf},
+};
 
 use crate::{
     app_context::AppContext,
@@ -32,7 +35,7 @@ impl From<&str> for SubProjectError {
 /// A link to another thatproject folder
 #[derive(Debug, Deserialize, Serialize, Clone, PartialEq, Eq)]
 pub struct SubprojectReference {
-    pub path: String,
+    pub path: PathBuf,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub alias: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
@@ -41,7 +44,7 @@ pub struct SubprojectReference {
 
 impl fmt::Display for SubprojectReference {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.path)
+        write!(f, "{}", self.path.to_string_lossy())
     }
 }
 
@@ -51,8 +54,8 @@ pub struct SubProject {
 }
 
 /// Path must exist, be a directory, exist within this project's folder and be a valid thatproject
-pub fn validate_value(context: &AppContext, value: &str) -> Result<(), SubProjectError> {
-    let path = Path::new(value).canonicalize()?;
+pub fn validate_value(context: &AppContext, value: &Path) -> Result<(), SubProjectError> {
+    let path = value.canonicalize()?;
     let context_dir = Path::new(&context.context_dir).canonicalize()?;
 
     if !path.exists() {
@@ -86,11 +89,7 @@ pub fn validate_value(context: &AppContext, value: &str) -> Result<(), SubProjec
 }
 
 impl SubprojectReference {
-    pub fn new(path: impl Into<String>, alias: Option<String>, note: Option<String>) -> Self {
-        Self {
-            path: path.into(),
-            alias,
-            note,
-        }
+    pub fn new(path: PathBuf, alias: Option<String>, note: Option<String>) -> Self {
+        Self { path, alias, note }
     }
 }

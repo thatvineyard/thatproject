@@ -6,6 +6,8 @@ mod summary;
 mod task;
 mod tasks;
 
+use std::path::PathBuf;
+
 use crate::{
     app_context::AppContext,
     cli::commands::{
@@ -52,7 +54,7 @@ pub enum Commands {
     )]
     AddSubproject {
         #[arg()]
-        path: String,
+        path: PathBuf,
         // Alias name for the subproject to use instead of the own project's name
         #[arg(long)]
         alias: Option<String>,

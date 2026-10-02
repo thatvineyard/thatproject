@@ -1,13 +1,24 @@
+use std::path::PathBuf;
+
 use crate::{
     app_context::AppContext,
     features::subproject::subproject::{SubprojectReference, validate_value},
+    tools::path::relativize,
 };
 
-pub fn run(context: &mut AppContext, path: String, alias: Option<String>, note: Option<String>) {
+pub fn run(context: &mut AppContext, path: PathBuf, alias: Option<String>, note: Option<String>) {
     if let Err(err) = validate_value(context, &path) {
         eprintln!("Error: {}", err);
         std::process::exit(1);
     }
+
+    let path = match relativize(&context.context_dir, &path) {
+        Ok(path) => path,
+        Err(error) => {
+            eprintln!("Error: {}", error);
+            std::process::exit(1);
+        }
+    };
 
     let project = match context.require_project_mut() {
         Ok(project) => project,
@@ -17,7 +28,7 @@ pub fn run(context: &mut AppContext, path: String, alias: Option<String>, note: 
         }
     };
 
-    let subproject = SubprojectReference::new(path.clone(), alias, note);
+    let subproject = SubprojectReference::new(path.to_path_buf(), alias, note);
 
     if let Err(err) = project.manifest.add_subproject(subproject) {
         eprintln!("Error: {}", err);
@@ -25,7 +36,7 @@ pub fn run(context: &mut AppContext, path: String, alias: Option<String>, note: 
     }
 
     match project.manifest.store() {
-        Ok(_) => println!("Subproject added: {}", path),
+        Ok(_) => println!("Subproject added: {}", path.display()),
         Err(error) => {
             eprintln!("Error: {}", error);
             std::process::exit(1);
