@@ -4,8 +4,8 @@ use std::path::{Path, PathBuf};
 
 use crate::features::manifest::manifest_error::ManifestError;
 use crate::features::manifest::manifest_file::ManifestFile;
+use crate::features::subproject::subproject::Subproject;
 use crate::reference::Reference;
-use crate::subproject::Subproject;
 
 #[derive(Debug)]
 pub struct Manifest {

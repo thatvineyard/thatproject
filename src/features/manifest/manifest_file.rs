@@ -3,8 +3,8 @@ use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
 use crate::features::manifest::manifest_error::ManifestError;
+use crate::features::subproject::subproject::Subproject;
 use crate::reference::Reference;
-use crate::subproject::Subproject;
 
 const MANIFEST_FILE_NAME: &str = "manifest.json";
 

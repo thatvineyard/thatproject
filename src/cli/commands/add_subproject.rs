@@ -1,7 +1,9 @@
-use crate::app_context::AppContext;
-use crate::subproject::{Subproject, validate_value};
+use crate::{
+    app_context::AppContext,
+    features::subproject::subproject::{Subproject, validate_value},
+};
 
-pub fn run(context: &mut AppContext, path: String, note: Option<String>) {
+pub fn run(context: &mut AppContext, path: String, alias: Option<String>, note: Option<String>) {
     if let Err(err) = validate_value(context, &path) {
         eprintln!("Error: {}", err);
         std::process::exit(1);
@@ -15,7 +17,7 @@ pub fn run(context: &mut AppContext, path: String, note: Option<String>) {
         }
     };
 
-    let subproject = Subproject::new(path.clone(), note);
+    let subproject = Subproject::new(path.clone(), alias, note);
 
     if let Err(err) = manifest.add_subproject(subproject) {
         eprintln!("Error: {}", err);

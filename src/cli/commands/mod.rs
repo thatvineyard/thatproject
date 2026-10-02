@@ -53,6 +53,10 @@ pub enum Commands {
     AddSubproject {
         #[arg()]
         path: String,
+        // Alias name for the subproject to use instead of the own project's name
+        #[arg(long)]
+        alias: Option<String>,
+        // Note to attach to the subproject
         #[arg(long)]
         note: Option<String>,
     },
@@ -79,7 +83,9 @@ impl Commands {
                 r#type,
                 note,
             } => add_reference::run(context, reference, r#type, note),
-            Commands::AddSubproject { path, note } => add_subproject::run(context, path, note),
+            Commands::AddSubproject { path, alias, note } => {
+                add_subproject::run(context, path, alias, note)
+            }
             Commands::Tasks(command) => command.run(context),
             Commands::Task(command) => command.run(context),
         }
