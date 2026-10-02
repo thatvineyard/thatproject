@@ -104,7 +104,7 @@ pub fn list(context: &AppContext) -> Result<Vec<TaskFile>, Box<dyn Error>> {
         .map(|entry| -> Result<Option<TaskFile>, Box<dyn Error>> {
             let path = entry?.path();
 
-            if !path.is_file() || !path.extension().is_some_and(|ext| ext != FILE_EXT) {
+            if !path.is_file() || !path.extension().is_some_and(|ext| ext == FILE_EXT) {
                 return Ok(None);
             }
             let data = fs::read_to_string(path)?;
