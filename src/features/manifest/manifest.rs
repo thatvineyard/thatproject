@@ -101,26 +101,47 @@ impl Manifest {
     pub fn references(&self) -> &Vec<Reference> {
         &self.file.references
     }
+
     pub fn resolve_subprojects(
         &self,
     ) -> Result<Vec<(&SubprojectReference, Project)>, Box<dyn Error>> {
         let subproject_refs = &self.file.subprojects;
+
+        subproject_refs
+            .iter()
+            .map(|subproject_ref| {
+                self.resolve_subproject(subproject_ref)
+                    .map(|resolved| (subproject_ref, resolved))
+            })
+            .collect()
+    }
+
+    pub fn resolve_subproject(
+        &self,
+        subproject_ref: &SubprojectReference,
+    ) -> Result<Project, Box<dyn std::error::Error>> {
         let parent_dir = self
             .thatproject_dir
             .parent()
             .ok_or("Unexpected directory structure")?;
 
-        subproject_refs
-            .iter()
-            .map(|subproject_ref| {
-                let manifest = Manifest::load(
-                    &parent_dir
-                        .join(&subproject_ref.path)
-                        .join(config::PROJECT_DIR),
-                )?;
-                let project = Project::resolve(manifest)?;
-                Ok((subproject_ref, project))
-            })
-            .collect()
+        let manifest = Manifest::load(
+            &parent_dir
+                .join(&subproject_ref.path)
+                .join(config::PROJECT_DIR),
+        )?;
+        let project = Project::resolve(manifest)?;
+        Ok(project)
+    }
+
+    pub fn try_get_subproject(
+        &self,
+        name: &str,
+    ) -> Result<Option<(&SubprojectReference, Project)>, Box<dyn std::error::Error>> {
+        let subprojects = self.resolve_subprojects()?;
+
+        Ok(subprojects
+            .into_iter()
+            .find(|sp| sp.1.manifest.name() == name || sp.0.alias.as_deref() == Some(name)))
     }
 }

@@ -45,7 +45,11 @@ impl AppContext {
     }
 }
 
-pub fn load(context_dir: Option<PathBuf>, agent_mode: bool) -> Result<AppContext, Box<dyn Error>> {
+pub fn load(
+    context_dir: Option<PathBuf>,
+    subproject: Option<String>,
+    agent_mode: bool,
+) -> Result<AppContext, Box<dyn Error>> {
     let context_dir = context_dir.unwrap_or_else(|| PathBuf::from(config::DEFAULT_CONTEXT_DIR));
 
     let project = match Manifest::load(&context_dir.join(config::PROJECT_DIR)) {
@@ -56,9 +60,23 @@ pub fn load(context_dir: Option<PathBuf>, agent_mode: bool) -> Result<AppContext
         },
     };
 
+    let context = match subproject {
+        Some(subproject_name) => match &project {
+            ProjectState::Valid(project) => project
+                .manifest
+                .try_get_subproject(&subproject_name)?
+                .ok_or("Subproject does not exist.")
+                .map(|p| (p.0.path.clone(), ProjectState::Valid(p.1)))?,
+            ProjectState::Unset => {
+                return Err("Project was not valid. Could not select subproject".into());
+            }
+        },
+        None => (context_dir, project),
+    };
+
     Ok(AppContext {
-        project,
-        context_dir,
+        project: context.1,
+        context_dir: context.0,
         agent_mode,
     })
 }

@@ -38,8 +38,9 @@ ThatProject
 
 ###### **Options:**
 
-* `-c`, `--context-dir <CONTEXT_DIR>`
-* `-a`, `--agent-mode`
+* `--context-dir <CONTEXT_DIR>` — Select a directory as context for all actions to be run on. Note: this must be a thatproject-enabled directory, not the .thatproject folder
+* `--subproject <SUBPROJECT>` — Select a subproject as context for all actions to be run on.
+* `-a`, `--agent-mode` — Activate to output data in a agent friendly format.
 
 
 
