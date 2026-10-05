@@ -119,7 +119,11 @@ pub fn add_reference(
     })
 }
 
-pub fn list(context: &AppContext) -> Result<(), Box<dyn Error>> {
+pub struct ListFilters {
+    pub status: Option<TaskStatus>,
+}
+
+pub fn list(context: &AppContext, filters: ListFilters) -> Result<(), Box<dyn Error>> {
     let tasks = tasks::store::list(context)?;
 
     if tasks.is_empty() {
@@ -127,7 +131,11 @@ pub fn list(context: &AppContext) -> Result<(), Box<dyn Error>> {
         return Ok(());
     }
 
-    for task in tasks {
+    let filtered_tasks = tasks
+        .iter()
+        .filter(|t| filters.status.map_or(true, |s| t.header.status == s));
+
+    for task in filtered_tasks {
         println!("{}", task.to_one_liner());
     }
 

@@ -14,7 +14,7 @@ fn default_category() -> Category {
     Category::new(DEFAULT_CATEGORY).expect("DEFAULT_CATEGORY constant must be a valid category")
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone, Copy, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum TaskStatus {
     Draft,

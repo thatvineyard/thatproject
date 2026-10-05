@@ -1,7 +1,10 @@
 mod add;
 mod list;
 
-use crate::app_context::AppContext;
+use crate::{
+    app_context::AppContext, cli::commands::task::set_status::TaskStatusArg,
+    features::tasks::taskfile::TaskStatus,
+};
 use clap::Subcommand;
 
 #[derive(Subcommand, Debug)]
@@ -19,7 +22,11 @@ pub enum TasksCommands {
 
     /// Lists all tasks
     #[command()]
-    List {},
+    List {
+        /// Show only tasks with this status
+        #[arg(long, short)]
+        status: Option<TaskStatusArg>,
+    },
 }
 
 impl TasksCommands {
@@ -30,7 +37,9 @@ impl TasksCommands {
                 category,
                 description,
             } => add::run(context, title, category, description),
-            TasksCommands::List {} => list::run(context),
+            TasksCommands::List { status } => {
+                list::run(context, status.map(|s| TaskStatus::from(s)))
+            }
         }
     }
 }

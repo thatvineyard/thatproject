@@ -3,7 +3,7 @@ mod read;
 mod set_body;
 mod set_category;
 mod set_description;
-mod set_status;
+pub mod set_status;
 mod set_title;
 
 use crate::cli::commands::reference_type_arg::ReferenceTypeArg;
