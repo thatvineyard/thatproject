@@ -40,7 +40,14 @@ Creates a task file in the task folder defined in the manifest.
 
 Lists all tasks
 
-**Usage:** `tasks list`
+**Usage:** `tasks list [OPTIONS]`
+
+###### **Options:**
+
+* `-s`, `--status <STATUS>` — Show only tasks with this status
+
+  Possible values: `draft`, `ongoing`, `complete`
+
 
 
 
