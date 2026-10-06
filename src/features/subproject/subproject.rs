@@ -56,7 +56,7 @@ pub struct SubProject {
 /// Path must exist, be a directory, exist within this project's folder and be a valid thatproject
 pub fn validate_value(context: &AppContext, value: &Path) -> Result<(), SubProjectError> {
     let path = value.canonicalize()?;
-    let context_dir = Path::new(&context.context_dir).canonicalize()?;
+    let context_dir = Path::new(&context.root_dir()).canonicalize()?;
 
     if !path.exists() {
         return Err(SubProjectError::Validation("Path does not exist".into()));

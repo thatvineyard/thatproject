@@ -12,7 +12,7 @@ pub fn run(context: &mut AppContext, path: PathBuf, alias: Option<String>, note:
         std::process::exit(1);
     }
 
-    let path = match relativize(&context.context_dir, &path) {
+    let path = match relativize(&context.root_dir(), &path) {
         Ok(path) => path,
         Err(error) => {
             eprintln!("Error: {}", error);

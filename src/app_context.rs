@@ -8,32 +8,60 @@ use crate::{
     },
 };
 
-pub enum ProjectState {
-    Valid(Project),
-    Unset,
+pub struct ProjectState {
+    root_project: Project,
+    project_selection: ProjectSelection,
+}
+
+impl ProjectState {
+    pub fn get_active_project(&self) -> &Project {
+        match &self.project_selection {
+            ProjectSelection::Root => &self.root_project,
+            ProjectSelection::Subproject(project) => project,
+        }
+    }
+
+    pub fn get_active_project_mut(&mut self) -> &mut Project {
+        match &mut self.project_selection {
+            ProjectSelection::Root => &mut self.root_project,
+            ProjectSelection::Subproject(project) => project,
+        }
+    }
 }
 
 pub struct AppContext {
-    pub project: ProjectState,
-    pub context_dir: PathBuf,
+    calling_dir: PathBuf,
+    root_dir: PathBuf,
+    pub project_state: Option<ProjectState>,
     pub agent_mode: bool,
 }
 
-impl AppContext {
-    pub fn require_project(&self) -> Result<&Project, Box<dyn Error>> {
-        let ProjectState::Valid(validated) = &self.project else {
-            return Err("project is not initialized".into());
-        };
+enum ProjectSelection {
+    Root,
+    Subproject(Project),
+}
 
-        Ok(&validated)
+impl AppContext {
+    fn require_project_state_mut(&mut self) -> Result<&mut ProjectState, Box<dyn Error>> {
+        Ok(self
+            .project_state
+            .as_mut()
+            .ok_or("Project is not initialized")?)
+    }
+
+    fn require_project_state(&self) -> Result<&ProjectState, Box<dyn Error>> {
+        Ok(self
+            .project_state
+            .as_ref()
+            .ok_or("Project is not initialized")?)
+    }
+
+    pub fn require_project(&self) -> Result<&Project, Box<dyn Error>> {
+        Ok(self.require_project_state()?.get_active_project())
     }
 
     pub fn require_project_mut(&mut self) -> Result<&mut Project, Box<dyn Error>> {
-        let ProjectState::Valid(validated) = &mut self.project else {
-            return Err("project manifest is not initialized".into());
-        };
-
-        Ok(validated)
+        Ok(self.require_project_state_mut()?.get_active_project_mut())
     }
 
     pub fn get_taskfile_dir(&self) -> Result<PathBuf, Box<dyn Error>> {
@@ -41,42 +69,61 @@ impl AppContext {
     }
 
     pub fn get_thatproject_dir(&self) -> PathBuf {
-        self.context_dir.join(config::PROJECT_DIR)
+        self.root_dir.join(config::PROJECT_DIR)
+    }
+
+    pub fn root_dir(&self) -> PathBuf {
+        self.calling_dir.join(&self.root_dir)
     }
 }
 
 pub fn load(
-    context_dir: Option<PathBuf>,
+    root_dir: Option<PathBuf>,
     subproject: Option<String>,
     agent_mode: bool,
 ) -> Result<AppContext, Box<dyn Error>> {
-    let context_dir = context_dir.unwrap_or_else(|| PathBuf::from(config::DEFAULT_CONTEXT_DIR));
+    let calling_dir = std::env::current_dir()?;
 
-    let project = match Manifest::load(&context_dir.join(config::PROJECT_DIR)) {
-        Ok(manifest) => ProjectState::Valid(Project::resolve(manifest)?),
+    let root_dir = root_dir.unwrap_or_else(|| PathBuf::from(config::DEFAULT_CONTEXT_DIR));
+
+    let project_state = match Manifest::load(&root_dir.join(config::PROJECT_DIR)) {
+        Ok(manifest) => Some(resolve_project_state(manifest, subproject)?),
         Err(error) => match error {
-            ManifestError::NotFound(_) => ProjectState::Unset,
+            ManifestError::NotFound(_) => {
+                if subproject.is_some() {
+                    return Err("Project was not valid. Cannot parse subproject".into());
+                };
+                None
+            }
             _ => return Err(error.into()),
         },
     };
 
-    let context = match subproject {
-        Some(subproject_name) => match &project {
-            ProjectState::Valid(project) => project
-                .manifest
-                .try_get_subproject(&subproject_name)?
-                .ok_or("Subproject does not exist.")
-                .map(|p| (p.0.path.clone(), ProjectState::Valid(p.1)))?,
-            ProjectState::Unset => {
-                return Err("Project was not valid. Could not select subproject".into());
-            }
-        },
-        None => (context_dir, project),
+    Ok(AppContext {
+        calling_dir,
+        root_dir,
+        project_state,
+        agent_mode,
+    })
+}
+
+fn resolve_project_state(
+    manifest: Manifest,
+    subproject: Option<String>,
+) -> Result<ProjectState, Box<dyn Error>> {
+    let root_project = Project::resolve(manifest)?;
+
+    let project_selection = match subproject {
+        Some(subproject_name) => root_project
+            .manifest
+            .try_get_subproject(&subproject_name)?
+            .ok_or("Subproject does not exist.")
+            .map(|p| ProjectSelection::Subproject(p.1))?,
+        None => ProjectSelection::Root,
     };
 
-    Ok(AppContext {
-        project: context.1,
-        context_dir: context.0,
-        agent_mode,
+    Ok(ProjectState {
+        root_project,
+        project_selection,
     })
 }

@@ -1,8 +1,8 @@
-use crate::app_context::{AppContext, ProjectState};
+use crate::app_context::AppContext;
 use std::process::exit;
 
 pub fn run(context: &AppContext, name: String, description: String, task_dir: String) {
-    if let ProjectState::Valid(_) = context.project {
+    if let Some(_) = context.project_state {
         println!("Project already initialized");
         exit(0);
     }
