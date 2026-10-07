@@ -4,6 +4,7 @@ use crate::reference::ReferenceType;
 pub enum ReferenceTypeArg {
     SourceCode,
     Documentation,
+    AgentInstruction,
 }
 
 impl From<ReferenceTypeArg> for ReferenceType {
@@ -11,6 +12,7 @@ impl From<ReferenceTypeArg> for ReferenceType {
         match reference_type {
             ReferenceTypeArg::SourceCode => Self::SourceCode,
             ReferenceTypeArg::Documentation => Self::Documentation,
+            ReferenceTypeArg::AgentInstruction => Self::AgentInstruction,
         }
     }
 }

@@ -115,7 +115,7 @@ Adds a reference to the task file header.
 
 * `--type <TYPE>`
 
-  Possible values: `source-code`, `documentation`
+  Possible values: `source-code`, `documentation`, `agent-instruction`
 
 * `--note <NOTE>`
 

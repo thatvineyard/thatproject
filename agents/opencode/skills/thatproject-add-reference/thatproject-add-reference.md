@@ -20,7 +20,7 @@ Add a reference (directory, file, glob pattern or URL) to the manifest. Plain pa
 
 * `--type <TYPE>`
 
-  Possible values: `source-code`, `documentation`
+  Possible values: `source-code`, `documentation`, `agent-instruction`
 
 * `--note <NOTE>`
 

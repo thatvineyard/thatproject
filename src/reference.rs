@@ -7,6 +7,7 @@ use std::fmt;
 pub enum ReferenceType {
     SourceCode,
     Documentation,
+    AgentInstruction,
 }
 
 impl fmt::Display for ReferenceType {
@@ -14,6 +15,7 @@ impl fmt::Display for ReferenceType {
         let label = match self {
             Self::SourceCode => "source_code",
             Self::Documentation => "documentation",
+            Self::AgentInstruction => "agent_instruction",
         };
         f.write_str(label)
     }
